@@ -248,6 +248,17 @@
     <label for="datador">Datador de Bruto</label>
     <input type="text" id="datador" placeholder="24/03/2026">
 
+    <div class="row3">
+      <div>
+        <label for="responsavel">Responsável pelas Informações</label>
+        <input type="text" id="responsavel" placeholder="Nome do responsável">
+      </div>
+      <div>
+        <label for="localEncontrado">Local Encontrado</label>
+        <input type="text" id="localEncontrado" placeholder="Ex: Linha de Usinagem 3">
+      </div>
+    </div>
+
     <label for="defeito">Descrição do Defeito</label>
     <textarea id="defeito" placeholder="Ex: AUSÊNCIA DE MOLIBDÊNIO"></textarea>
 
@@ -298,7 +309,7 @@ document.getElementById('cliente').addEventListener('change', (e) => {
   renderCard();
 });
 
-['clienteOutro','pn','rastreio','turno','datador','defeito'].forEach(id => {
+['clienteOutro','pn','rastreio','turno','datador','responsavel','localEncontrado','defeito'].forEach(id => {
   document.getElementById(id).addEventListener('input', renderCard);
 });
 
@@ -351,12 +362,13 @@ function drawImageCover(ctx, img, x, y, w, h){
   ctx.restore();
 }
 
-function fitTextToWidth(ctx, text, cx, baseline, maxWidth, baseSize, font){
+function fitTextToWidth(ctx, text, cx, baseline, maxWidth, baseSize, font, weight){
+  weight = weight === undefined ? 'bold' : weight;
   let size = baseSize;
-  ctx.font = `bold ${size}px ${font}`;
-  while (ctx.measureText(text).width > maxWidth && size > 16) {
+  ctx.font = `${weight} ${size}px ${font}`.trim();
+  while (ctx.measureText(text).width > maxWidth && size > 12) {
     size -= 2;
-    ctx.font = `bold ${size}px ${font}`;
+    ctx.font = `${weight} ${size}px ${font}`.trim();
   }
   ctx.fillText(text, cx, baseline);
 }
@@ -584,6 +596,36 @@ function renderCard(){
 
     ctx.font = '20px ' + FONT;
     ctx.fillText(col.value, cx + col3W/2, y + labelH + col3BoxH/2 + 7);
+  });
+  ctx.textAlign = 'left';
+
+  y += labelH + col3BoxH + 34;
+
+  // ---- Responsável / Local Encontrado row ----
+  const col2Gap = 20;
+  const col2W = (W - pad*2 - col2Gap) / 2;
+
+  const responsavel = document.getElementById('responsavel').value || '—';
+  const localEncontrado = document.getElementById('localEncontrado').value || '—';
+
+  const cols2 = [
+    { label: 'Responsável pelas Informações', value: responsavel },
+    { label: 'Local Encontrado', value: localEncontrado },
+  ];
+
+  cols2.forEach((col, i) => {
+    const cx = pad + i*(col2W + col2Gap);
+    ctx.fillStyle = '#222';
+    ctx.font = 'bold 18px ' + FONT;
+    ctx.textAlign = 'center';
+    ctx.fillText(col.label, cx + col2W/2, y + labelH - 4);
+
+    ctx.strokeStyle = '#cfcfcf';
+    ctx.lineWidth = 2;
+    roundRect(ctx, cx, y + labelH, col2W, col3BoxH, 8);
+    ctx.stroke();
+
+    fitTextToWidth(ctx, col.value, cx + col2W/2, y + labelH + col3BoxH/2 + 7, col2W - 30, 20, FONT, '');
   });
   ctx.textAlign = 'left';
 
