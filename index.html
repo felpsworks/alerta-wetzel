@@ -336,6 +336,13 @@ function removeImage(i){
   renderCard();
 }
 
+function getTodayFormatted(){
+  const d = new Date();
+  const dd = String(d.getDate()).padStart(2, '0');
+  const mm = String(d.getMonth() + 1).padStart(2, '0');
+  return `${dd}/${mm}/${d.getFullYear()}`;
+}
+
 function roundRect(ctx, x, y, w, h, r){
   if (typeof r === 'number') r = {tl:r, tr:r, br:r, bl:r};
   ctx.beginPath();
@@ -463,12 +470,35 @@ function renderCard(){
 
   ctx.textAlign = 'left';
   ctx.textBaseline = 'alphabetic';
+
+  const titleX = 160;
+  const titleMaxWidth = W - pad - titleX;
+  const titlePart1 = 'ATENÇÃO, ';
+  const titlePart2 = 'TIME WETZEL!';
+  let titleSize = 44;
+  let w1, w2;
+  do {
+    ctx.font = `bold ${titleSize}px ${FONT}`;
+    w1 = ctx.measureText(titlePart1).width;
+    ctx.font = `italic bold ${titleSize}px ${FONT}`;
+    w2 = ctx.measureText(titlePart2).width;
+    if (w1 + w2 <= titleMaxWidth) break;
+    titleSize -= 2;
+  } while (titleSize > 20);
+
+  const titleBaseline = 92;
   ctx.fillStyle = '#ffffff';
-  ctx.font = 'bold 44px ' + FONT;
-  ctx.fillText('ATENÇÃO,', 160, 68);
+  ctx.font = `bold ${titleSize}px ${FONT}`;
+  ctx.fillText(titlePart1, titleX, titleBaseline);
   ctx.fillStyle = GOLD;
-  ctx.font = 'italic bold 44px ' + FONT;
-  ctx.fillText('TIME WETZEL!', 160, 118);
+  ctx.font = `italic bold ${titleSize}px ${FONT}`;
+  ctx.fillText(titlePart2, titleX + w1, titleBaseline);
+
+  ctx.fillStyle = '#ffffff';
+  ctx.font = 'bold 22px ' + FONT;
+  ctx.textAlign = 'right';
+  ctx.fillText(getTodayFormatted(), W - pad, headerH - 22);
+  ctx.textAlign = 'left';
 
   y = headerH + 20;
 
@@ -658,14 +688,21 @@ function renderCard(){
   ctx.lineTo(W - pad, y);
   ctx.stroke();
 
-  y += 18;
-  const footerH = 108;
+  y += 22;
+  const logoH = 80;
   if (wetzelLogo.complete && wetzelLogo.naturalWidth) {
-    const logoH = 92;
     const logoW = logoH * (wetzelLogo.naturalWidth / wetzelLogo.naturalHeight);
-    ctx.drawImage(wetzelLogo, W/2 - logoW/2, y + (footerH - logoH)/2, logoW, logoH);
+    ctx.drawImage(wetzelLogo, W/2 - logoW/2, y, logoW, logoH);
   }
-  y += footerH + pad;
+  y += logoH + 16;
+
+  ctx.fillStyle = '#888888';
+  ctx.font = '17px ' + FONT;
+  ctx.textAlign = 'center';
+  ctx.fillText('Avenida Magal, 261 - Jardim Amanda II, Resende - SP, 13190-000', W/2, y);
+  ctx.textAlign = 'left';
+
+  y += pad;
 
   if (canvas.height !== y) {
     canvas.height = y;
