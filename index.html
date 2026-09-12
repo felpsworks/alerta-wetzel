@@ -3,18 +3,22 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Alerta Time Wetzel</title>
+<title>Painel Wetzel Automotiva</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
   :root{
-    --red:#c81e1e;
-    --red-dark:#7a1013;
-    --gold:#ffc72c;
+    --red:#dc1717;
+    --red-dark:#921e1b;
+    --navy:#0e4a66;
     --gray-bg:#e9e9e9;
     --border:#d8d8d8;
-    --bg:#f2f2f2;
+    --bg:#f3f3f3;
     --panel-bg:#ffffff;
     --text:#222222;
-    --text-secondary:#767070;
+    --text-secondary:#5f5f5f;
     --input-bg:#ffffff;
     --input-border:#cccccc;
     --btn-secondary-bg:#eeeeee;
@@ -51,67 +55,98 @@
   }
   *{box-sizing:border-box;}
   html, body{
-    height:100vh;
-    height:100dvh;
+    min-height:100vh;
     margin:0;
-    font-family:Arial, Helvetica, sans-serif;
+    font-family:"Manrope", Arial, Helvetica, sans-serif;
     background:var(--bg);
     color:var(--text);
-    overflow:hidden;
-  }
-  @media (max-width:800px), (max-height:600px){
-    html, body{ height:auto; overflow:auto; }
   }
   header{
     background:var(--red);
     color:#fff;
-    padding:12px 24px;
-    font-size:18px;
-    font-weight:bold;
-    height:46px;
+    padding:8px 24px;
+    height:58px;
     box-sizing:border-box;
     display:flex;
     align-items:center;
+    gap:14px;
   }
+  #headerLogo{
+    background:#fff;
+    border-radius:6px;
+    padding:5px 10px;
+    display:flex;
+    align-items:center;
+    flex:0 0 auto;
+  }
+  #headerLogo svg{ display:block; height:26px; width:auto; }
+  header .headerTitle{
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    line-height:1.25;
+  }
+  header .headerTitle strong{
+    font-size:16px;
+    font-weight:800;
+    letter-spacing:.2px;
+  }
+  header .headerTitle span{
+    font-size:12px;
+    font-weight:500;
+    color:rgba(255,255,255,.85);
+  }
+  .headerNav{ margin-left:auto; display:flex; align-items:center; gap:8px; }
+  .tabBtn{
+    font-family:inherit; font-size:13px; font-weight:700; cursor:pointer;
+    padding:8px 16px; border-radius:999px; border:1px solid rgba(255,255,255,.5);
+    background:transparent; color:#fff;
+  }
+  .tabBtn:hover{ background:rgba(255,255,255,.15); }
+  .tabBtn.active{ background:#fff; color:var(--red); border-color:#fff; }
+
   .wrap{
     display:flex;
-    flex-wrap:nowrap;
-    gap:20px;
-    padding:16px;
-    height:calc(100% - 46px);
-    overflow:hidden;
-  }
-  @media (max-width:800px), (max-height:600px){
-    .wrap{ flex-wrap:wrap; height:auto; overflow:visible; }
+    flex-wrap:wrap;
+    gap:14px;
+    padding:12px 20px;
+    align-items:flex-start;
   }
   .panel{
     background:var(--panel-bg);
     border:1px solid var(--border);
     border-radius:10px;
-    padding:18px;
-    flex:0 0 360px;
-    max-width:360px;
-    height:100%;
-    overflow-y:auto;
+    padding:16px;
+    flex:0 0 380px;
+    max-width:380px;
   }
-  @media (max-width:800px), (max-height:600px){
-    .panel{ flex:1 1 100%; max-width:100%; height:auto; overflow:visible; }
+  .listPanel{
+    background:var(--panel-bg);
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:16px;
+    flex:1 1 480px;
+    min-width:0;
   }
-  .panel h2{
+  h2{
     margin-top:0;
     font-size:16px;
     color:var(--red);
   }
+  .listPanelHeader{
+    display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;
+  }
+  .listPanelHeader h2{ margin-bottom:0; }
   label{
     display:block;
     font-size:13px;
     font-weight:bold;
-    margin:12px 0 4px;
+    margin:6px 0 3px;
     color:var(--text);
   }
   input[type=text], textarea, select{
     width:100%;
-    padding:8px 10px;
+    padding:7px 10px;
     border:1px solid var(--input-border);
     border-radius:6px;
     font-size:14px;
@@ -119,18 +154,31 @@
     background:var(--input-bg);
     color:var(--text);
   }
-  textarea{ resize:vertical; min-height:50px; }
+  textarea{ resize:vertical; min-height:38px; }
+  .row2{ display:flex; gap:10px; }
+  .row2 > div{ flex:1; }
   .row3{ display:flex; gap:10px; }
   .row3 > div{ flex:1; }
+  .hint{ font-size:12px; color:var(--text-secondary); }
+  .turnoOptions{ display:flex; gap:10px; margin-top:4px; }
+  .turnoChip{
+    width:42px; height:42px; border-radius:50%; flex:0 0 auto;
+    border:2px solid var(--input-border); background:var(--input-bg); color:var(--text);
+    font-family:inherit; font-size:13px; font-weight:700; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .turnoChip:hover{ border-color:var(--red); }
+  .turnoChip.active{ background:var(--red); border-color:var(--red); color:#fff; }
   .imgbtn{
     display:inline-block;
     margin-top:8px;
-    padding:8px 14px;
+    padding:9px 18px;
     background:var(--red);
     color:#fff;
     border:none;
-    border-radius:6px;
+    border-radius:999px;
     font-size:13px;
+    font-weight:700;
     cursor:pointer;
   }
   .imgbtn:hover{ background:var(--red-dark); }
@@ -162,127 +210,793 @@
     cursor:pointer;
   }
   .actions{
-    margin-top:16px;
+    margin-top:12px;
     display:flex;
     gap:10px;
+    flex-wrap:wrap;
   }
   .btn{
-    padding:10px 18px;
+    padding:11px 22px;
     border:none;
-    border-radius:6px;
+    border-radius:999px;
     font-size:14px;
     cursor:pointer;
-    font-weight:bold;
+    font-weight:700;
   }
   .btn-primary{ background:var(--red); color:#fff; }
   .btn-primary:hover{ background:var(--red-dark); }
   .btn-secondary{ background:var(--btn-secondary-bg); color:var(--text); }
   .btn-secondary:hover{ background:var(--btn-secondary-bg-hover); }
-  .preview{
-    flex:1 1 auto;
-    height:100%;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    overflow:hidden;
-    min-width:0;
+  .btn-whatsapp{
+    background:#25D366; color:#fff;
+    display:inline-flex; align-items:center; gap:8px;
   }
-  @media (max-width:800px), (max-height:600px){
-    .preview{ flex:1 1 100%; width:100%; height:auto; overflow:visible; padding:8px 0 24px; }
+  .btn-whatsapp:hover{ background:#1ebe5a; }
+  .btn-whatsapp svg{ flex:0 0 auto; }
+  .preview{
+    flex:1 1 480px;
+    min-width:0;
+    display:flex;
+    justify-content:center;
   }
   #outputCanvas{
     max-width:100%;
-    max-height:100%;
+    max-height:70vh;
+    width:auto;
+    height:auto;
     border:1px solid var(--border);
     border-radius:10px;
     background:#fff;
     box-shadow:0 2px 10px var(--canvas-shadow);
     display:block;
   }
-  .hint{ font-size:12px; color:var(--text-secondary); }
+
+  .resultCard{
+    margin-bottom:0;
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:22px 26px;
+    background:var(--gray-bg);
+    display:flex;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:24px;
+  }
+  .resultCard .resultTop{ display:flex; align-items:center; gap:18px; flex:1 1 260px; }
+  .resultAvatar{
+    width:92px; height:92px; border-radius:50%; object-fit:cover;
+    border:3px solid var(--panel-bg); box-shadow:0 2px 10px rgba(0,0,0,.15);
+    flex:0 0 auto; background:var(--panel-bg);
+  }
+  .resultLabel{ font-size:12px; font-weight:700; color:var(--text-secondary); text-transform:uppercase; letter-spacing:.4px; margin-bottom:2px; }
+  .resultCard .resultName{ font-weight:800; font-size:26px; line-height:1.15; }
+  .resultCard .resultCliente{ font-size:16px; color:var(--text-secondary); margin-top:4px; }
+  .resultGrid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:16px;
+    flex:1 1 380px;
+  }
+  .resultGrid .field{
+    position:relative;
+    background:var(--panel-bg);
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:12px 44px 12px 16px;
+  }
+  .resultGrid .field .k{ font-size:12px; font-weight:700; color:var(--text-secondary); text-transform:uppercase; letter-spacing:.4px; }
+  .resultGrid .field .v{ font-size:30px; font-weight:800; margin-top:4px; word-break:break-word; }
+  .copyBtn{
+    position:absolute; top:10px; right:10px;
+    width:30px; height:30px; padding:0;
+    display:flex; align-items:center; justify-content:center;
+    background:none; border:none; border-radius:8px; cursor:pointer;
+    color:var(--text-secondary);
+  }
+  .copyBtn svg{ width:18px; height:18px; }
+  .copyBtn:hover{ background:var(--btn-secondary-bg-hover); color:var(--red); }
+  .copyBtn.copied{ color:#1a7f37; }
+  .copyBtn .iconCheck{ display:none; }
+  .copyBtn.copied .iconCopy{ display:none; }
+  .copyBtn.copied .iconCheck{ display:block; }
+
+  details.pnManager{ margin-top:16px; border-top:1px solid var(--border); padding-top:12px; }
+  details.pnManager summary{ cursor:pointer; font-weight:bold; font-size:13px; color:var(--red); }
+  details.pnManager textarea{ margin-top:8px; font-family:monospace; font-size:12px; min-height:70px; resize:vertical; }
+  details.pnManager .actions{ margin-top:8px; display:flex; gap:10px; }
+
+  .tableWrap{ margin-top:12px; max-height:70vh; overflow:auto; border:1px solid var(--border); border-radius:8px; }
+  table{ width:100%; border-collapse:collapse; font-size:13px; }
+  thead th{
+    position:sticky; top:0;
+    background:var(--gray-bg);
+    text-align:left;
+    padding:10px 12px;
+    border-bottom:1px solid var(--border);
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:.4px;
+    color:var(--text-secondary);
+  }
+  tbody td{
+    padding:9px 12px;
+    border-bottom:1px solid var(--border);
+  }
+  tbody tr:hover{ background:var(--gray-bg); }
+  .emptyRow td{ text-align:center; color:var(--text-secondary); padding:24px; }
+  .emptyRow:hover{ background:transparent; }
+
+  .analystGrid{ margin-top:12px; display:grid; grid-template-columns:repeat(auto-fill, minmax(140px,1fr)); gap:14px; }
+  .analystCard{
+    border:1px solid var(--border); border-radius:10px; padding:14px; text-align:center;
+    background:var(--gray-bg);
+  }
+  .analystAvatar{ width:64px; height:64px; border-radius:50%; object-fit:cover; border:1px solid var(--border); background:var(--panel-bg); }
+  .analystName{ font-weight:700; font-size:13px; margin:8px 0 10px; }
+  .analystCard .btn{ padding:7px 14px; font-size:12px; }
+
+  .rowActions{ white-space:nowrap; }
+  .linkBtn{
+    background:none; border:none; padding:0; margin-right:12px; cursor:pointer;
+    font-family:inherit; font-size:13px; font-weight:700; color:var(--navy);
+  }
+  .linkBtn:hover{ text-decoration:underline; }
+  .linkBtn.danger{ color:var(--red); }
 </style>
 </head>
 <body>
 
-<header>Gerador de Notificação de Reclamação — Padrão Fábrica</header>
+<header>
+  <div id="headerLogo"></div>
+  <div class="headerTitle">
+    <strong>Painel Wetzel Automotiva</strong>
+    <span>Consulta de PN &amp; Gerador de Alerta</span>
+  </div>
+  <div class="headerNav">
+    <button type="button" class="tabBtn active" data-tab="inicio">Início</button>
+    <button type="button" class="tabBtn" data-tab="config">Configuração</button>
+  </div>
+</header>
 
-<div class="wrap">
+<div id="tab-inicio" class="tabPanel">
 
-  <div class="panel">
-    <h2>Dados da Reclamação</h2>
-
-    <label for="cliente">Cliente</label>
-    <select id="cliente">
-      <option value="">Selecione...</option>
-      <option>AAM</option>
-      <option>GM</option>
-      <option>MWM</option>
-      <option>ZF</option>
-      <option>EATON</option>
-      <option>SCANIA</option>
-      <option>MBB</option>
-      <option>VOLVO</option>
-      <option value="__outro__">Outro (digitar)</option>
-    </select>
-    <input type="text" id="clienteOutro" placeholder="Digite o nome do cliente" style="display:none; margin-top:8px;">
-
-    <label for="pn">Part Number (PN)</label>
-    <input type="text" id="pn" placeholder="Ex: 2565">
-
-    <label>Imagens do Defeito (até 4)</label>
-    <input type="file" id="fileInput" accept="image/*" multiple style="display:none">
-    <button type="button" class="imgbtn" onclick="document.getElementById('fileInput').click()">Selecionar imagens</button>
-    <div id="thumbs"></div>
-
-    <div class="row3">
-      <div>
-        <label for="rastreio">Rastreabilidade Usinado</label>
-        <input type="text" id="rastreio" placeholder="0046 / 0082 / 0092">
+  <div class="wrap">
+    <div class="panel">
+      <h2>Consultar PN</h2>
+      <div class="row2">
+        <div>
+          <label for="qWetzel">PN Wetzel</label>
+          <input type="text" id="qWetzel" placeholder="Ex: 2569" autocomplete="off">
+        </div>
+        <div>
+          <label for="qCliente">PN Cliente</label>
+          <input type="text" id="qCliente" placeholder="Ex: 40117315" autocomplete="off">
+        </div>
       </div>
-      <div>
-        <label for="turno">Turno</label>
-        <input type="text" id="turno" placeholder="T1">
-      </div>
+      <p id="lookupStatus" class="hint" style="min-height:16px;margin:8px 0 0;"></p>
     </div>
 
-    <label for="datador">Datador de Bruto</label>
-    <input type="text" id="datador" placeholder="24/03/2026">
-
-    <div class="row3">
-      <div>
-        <label for="responsavel">Responsável pelas Informações</label>
-        <input type="text" id="responsavel" placeholder="Nome do responsável">
-      </div>
-      <div>
-        <label for="localEncontrado">Local Encontrado</label>
-        <input type="text" id="localEncontrado" placeholder="Ex: Linha de Usinagem 3">
+    <div class="listPanel">
+      <div id="resultCard" class="resultCard">
+        <div class="resultTop">
+          <img id="resultAvatarImg" class="resultAvatar" alt="Foto do responsável">
+          <div>
+            <div class="resultLabel">Analista Responsável</div>
+            <div id="resultName" class="resultName">—</div>
+            <div id="resultCliente" class="resultCliente">—</div>
+          </div>
+        </div>
+        <div class="resultGrid">
+          <div class="field">
+            <div class="k">PN Wetzel</div>
+            <div class="v" id="resultPnW">—</div>
+            <button type="button" class="copyBtn" data-copy-target="resultPnW" title="Copiar PN Wetzel" aria-label="Copiar PN Wetzel">
+              <svg class="iconCopy" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+              <svg class="iconCheck" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            </button>
+          </div>
+          <div class="field">
+            <div class="k">PN Cliente</div>
+            <div class="v" id="resultPnC">—</div>
+            <button type="button" class="copyBtn" data-copy-target="resultPnC" title="Copiar PN Cliente" aria-label="Copiar PN Cliente">
+              <svg class="iconCopy" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+              <svg class="iconCheck" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            </button>
+          </div>
+        </div>
       </div>
     </div>
-
-    <label for="defeito">Descrição do Defeito</label>
-    <textarea id="defeito" placeholder="Ex: AUSÊNCIA DE MOLIBDÊNIO"></textarea>
-
-    <div class="actions">
-      <button class="btn btn-primary" onclick="renderCard()">Gerar Imagem</button>
-      <button class="btn btn-secondary" onclick="downloadImage()">Baixar PNG</button>
-    </div>
-    <p class="hint">A prévia atualiza automaticamente enquanto você digita.</p>
   </div>
 
-  <div class="preview">
-    <canvas id="outputCanvas" width="1000" height="1200"></canvas>
+  <div class="wrap">
+    <div class="panel">
+      <h2>Dados da Reclamação</h2>
+
+      <label for="cliente">Cliente</label>
+      <select id="cliente">
+        <option value="">Selecione...</option>
+        <option>AAM</option>
+        <option>GM</option>
+        <option>MWM</option>
+        <option>ZF</option>
+        <option>EATON</option>
+        <option>SCANIA</option>
+        <option>MBB</option>
+        <option>VOLVO</option>
+        <option value="__outro__">Outro (digitar)</option>
+      </select>
+      <input type="text" id="clienteOutro" placeholder="Digite o nome do cliente" style="display:none; margin-top:8px;">
+
+      <label for="pn">Part Number (PN)</label>
+      <input type="text" id="pn" placeholder="Ex: 2565">
+
+      <label>Imagens do Defeito (até 4)</label>
+      <input type="file" id="fileInput" accept="image/*" multiple style="display:none">
+      <button type="button" class="imgbtn" onclick="document.getElementById('fileInput').click()">Selecionar imagens</button>
+      <div id="thumbs"></div>
+
+      <label for="rastreio">Rastreabilidade Usinado</label>
+      <input type="text" id="rastreio" placeholder="0046 / 0082 / 0092">
+
+      <label>Turno</label>
+      <div class="turnoOptions" id="turnoOptions">
+        <button type="button" class="turnoChip" data-turno="T1">T1</button>
+        <button type="button" class="turnoChip" data-turno="T2">T2</button>
+        <button type="button" class="turnoChip" data-turno="T3">T3</button>
+      </div>
+      <input type="hidden" id="turno" value="">
+
+      <label for="datador">Datador de Bruto</label>
+      <input type="text" id="datador" placeholder="24/03/2026">
+
+      <div class="row3">
+        <div>
+          <label for="responsavel">Responsável pelas Informações</label>
+          <input type="text" id="responsavel" placeholder="Nome do responsável">
+        </div>
+        <div>
+          <label for="localEncontrado">Local Encontrado</label>
+          <input type="text" id="localEncontrado" placeholder="Ex: Linha de Usinagem 3">
+        </div>
+      </div>
+
+      <label for="defeito">Descrição do Defeito</label>
+      <textarea id="defeito" placeholder="Ex: AUSÊNCIA DE MOLIBDÊNIO"></textarea>
+
+      <div class="actions">
+        <button class="btn btn-primary" onclick="renderCard()">Gerar Imagem</button>
+        <button class="btn btn-whatsapp" onclick="sendToWhatsApp()">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.39 1.26 4.81L2 22l5.42-1.42a9.87 9.87 0 0 0 4.62 1.18h.01c5.46 0 9.9-4.45 9.9-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2zm5.8 14.16c-.24.68-1.4 1.32-1.93 1.4-.5.08-1.12.11-1.81-.11-.42-.13-.96-.31-1.65-.6-2.9-1.25-4.79-4.17-4.94-4.36-.14-.19-1.18-1.57-1.18-3 0-1.42.75-2.12 1.02-2.41.27-.29.58-.36.78-.36.19 0 .39 0 .56.01.18.01.42-.07.66.5.24.58.83 2 .9 2.15.07.14.12.31.02.5-.09.19-.14.31-.28.48-.14.17-.29.37-.42.5-.14.14-.28.29-.12.57.16.28.7 1.16 1.51 1.88 1.04.93 1.91 1.22 2.19 1.36.28.14.44.12.6-.07.16-.19.68-.79.86-1.06.18-.27.36-.22.6-.13.24.09 1.53.72 1.79.85.26.13.43.19.5.3.06.11.06.63-.18 1.31z"></path></svg>
+          Enviar
+        </button>
+      </div>
+      <p class="hint" style="margin-top:8px;">A prévia atualiza automaticamente enquanto você digita.</p>
+    </div>
+
+    <div class="preview">
+      <canvas id="outputCanvas" width="1000" height="1200"></canvas>
+    </div>
   </div>
 
 </div>
 
+<div id="tab-config" class="tabPanel" hidden>
+<div class="wrap">
+
+  <div class="panel">
+    <h2 id="formTitle">Adicionar Peça</h2>
+    <div class="row2">
+      <div>
+        <label for="formW">PN Wetzel</label>
+        <input type="text" id="formW" placeholder="Ex: 2569">
+      </div>
+      <div>
+        <label for="formC">Cliente</label>
+        <input type="text" id="formC" placeholder="Ex: EATON">
+      </div>
+    </div>
+    <div class="row2">
+      <div>
+        <label for="formPc">PN Cliente</label>
+        <input type="text" id="formPc" placeholder="Ex: 40117315">
+      </div>
+      <div>
+        <label for="formR">Responsável</label>
+        <input type="text" id="formR" placeholder="Nome do responsável">
+      </div>
+    </div>
+    <div class="actions">
+      <button type="button" class="btn btn-primary" onclick="saveFormRow()">Salvar peça</button>
+      <button type="button" class="btn btn-secondary" onclick="clearForm()">Limpar</button>
+    </div>
+    <p id="formStatus" class="hint" style="min-height:16px;margin-top:10px;"></p>
+
+    <details class="pnManager">
+      <summary>Importação em massa</summary>
+      <p class="hint">Cole aqui linhas com: PN Wetzel; Cliente; PN Cliente; Responsável — uma peça por linha (funciona colar direto do Excel).</p>
+      <textarea id="pnImportText" placeholder="2569;AAM;40117315;Felipe Faria"></textarea>
+      <div class="actions">
+        <button type="button" class="btn btn-secondary" onclick="importPnDatabase()">Importar/atualizar</button>
+        <button type="button" class="btn btn-secondary" onclick="exportPnDatabase()">Exportar atual (CSV)</button>
+      </div>
+    </details>
+  </div>
+
+  <div class="listPanel">
+    <h2>Fotos dos Analistas</h2>
+    <p class="hint">Clique em "Trocar foto" para cada responsável — a foto fica salva neste navegador.</p>
+    <div id="analystGrid" class="analystGrid"></div>
+    <input type="file" id="analystPhotoInput" accept="image/*" style="display:none">
+  </div>
+
+</div>
+
+<div class="wrap">
+  <div class="listPanel" style="flex:1 1 100%; max-width:none;">
+    <div class="listPanelHeader">
+      <h2>Peças cadastradas (<span id="configCount">0</span>)</h2>
+      <div class="actions" style="margin-top:0;">
+        <button type="button" class="btn btn-secondary" onclick="exportPecasExcel()">Exportar Excel</button>
+        <button type="button" class="btn btn-secondary" onclick="exportPecasPdf()">Exportar PDF</button>
+      </div>
+    </div>
+    <input type="text" id="configSearch" placeholder="Filtrar por PN Wetzel, PN Cliente, cliente ou responsável...">
+    <div class="tableWrap">
+      <table id="configTable">
+        <thead>
+          <tr>
+            <th>PN Wetzel</th>
+            <th>Cliente</th>
+            <th>PN Cliente</th>
+            <th>Responsável</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody id="configTableBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+</div>
+
 <script>
-const WETZEL_LOGO_B64 = "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";
+const WETZEL_LOGO_SVG = `<svg xmlns="http://www.w3.org/2000/svg" id="Camada_1" data-name="Camada 1" viewBox="0 0 160 55"><path d="M134.48,9.39c0-2.89-2.34-5.23-5.23-5.23H30.73c-2.89,0-5.23,2.34-5.23,5.23v25.15c0,2.89,2.34,5.23,5.23,5.23h34.71v6.9c0,2.86,2.32,5.18,5.18,5.18h58.69c2.87,0,5.2-2.33,5.2-5.2l-.02-37.25Z" style="fill: #fff; stroke-width: 0px;"></path><g><g><path d="M112.59,21.92c.03-.19.02-.29-.04-.5-.31-1-1.02-1.58-2.01-1.82-.62-.15-1.23-.07-1.83.12-.44.14-.81.38-1.1.75-.31.39-.43.84-.46,1.32,0,.04,0,.09.01.13h5.42Z" style="fill: #d9251d; stroke-width: 0px;"></path><path d="M69.26,21.93c0-.27-.06-.54-.17-.78-.45-.94-1.21-1.45-2.23-1.57-.54-.06-1.07,0-1.58.2-.78.29-1.27.83-1.43,1.65-.03.17-.07.34-.04.51.19.03,5.34.02,5.45-.01Z" style="fill: #d9251d; stroke-width: 0px;"></path><path d="M128.5,7.14H31.5c-1.66,0-3.01,1.35-3.01,3.01v23.63c0,1.66,1.35,3.01,3.01,3.01h36.81v8.24c0,2.11,1.37,3.82,3.05,3.82h57.1c1.68,0,3.05-1.71,3.05-3.82V10.16c0-1.66-1.35-3.01-3.01-3.01ZM119.46,13.06s.08-.01.12-.01c.62,0,1.24,0,1.85.01.85,0,1.7.02,2.54.03.47,0,.94.01,1.41.02.05,0,.1.01.15.02v17.6h-6.08V13.06ZM101.44,21.25c.25-.72.64-1.36,1.15-1.93.73-.8,1.62-1.38,2.62-1.79.76-.32,1.56-.53,2.37-.64.41-.06.83-.1,1.25-.13.49-.02.98-.04,1.47-.02,1.02.04,2.02.19,3,.49.75.23,1.46.54,2.11.97,1.26.82,2.14,1.92,2.66,3.31.2.55.34,1.12.4,1.71.03.32.04.64.06.96,0,.04.01.08.01.12,0,.07,0,.15-.01.24h-11.44c-.03.33.04.63.16.93.23.6.66,1.03,1.23,1.33.61.33,1.27.43,1.96.36.5-.05.96-.21,1.36-.53.18-.14.32-.31.44-.49.03-.05.06-.09.09-.13h5.73c-.03.1-.06.2-.09.29-.28.73-.69,1.37-1.25,1.93-.69.69-1.51,1.2-2.42,1.57-.87.36-1.77.58-2.7.71-.46.06-.93.11-1.4.12-.25,0-.5.02-.75.02-1.43-.04-2.83-.28-4.14-.86-.92-.41-1.75-.95-2.44-1.68-.77-.81-1.3-1.76-1.57-2.85-.1-.39-.16-.78-.19-1.19-.08-.96.02-1.9.34-2.82ZM86.79,26.56c.76-.65,1.52-1.3,2.27-1.95,1.16-1,2.32-2,3.49-3,.51-.44,1.02-.88,1.54-1.31.04-.04.08-.08.15-.14-.06,0-.08,0-.11,0-.05,0-.1,0-.15.01-1.3,0-2.6,0-3.9.01-.73,0-1.47.01-2.2.02-.15,0-.3,0-.45,0-.04,0-.09,0-.14,0v-3.56c.11-.03,13.42-.04,13.68-.01,0,.04.01.07.01.11,0,1.18,0,2.36,0,3.54,0,.08-.03.14-.09.19-.74.64-1.47,1.29-2.21,1.94-.68.6-1.37,1.2-2.05,1.8-.9.79-1.79,1.58-2.69,2.37-.05.05-.1.09-.15.14,0,.01,0,.02.01.03h7.26c.03.11.05,3.7.02,3.96,0,0,0,0-.01.01,0,0,0,0-.01,0-.01,0-.03,0-.04,0-4.75,0-9.51,0-14.26,0-.02,0-.04,0-.08,0,0-.06,0-.12,0-.17,0-1.25,0-2.49,0-3.74,0-.11.04-.18.12-.25ZM74.96,16.68h2.15c.01-.25,0-.48,0-.71,0-.24,0-.47,0-.7v-2.11c.07,0,.11,0,.16,0,1.03,0,2.06,0,3.1-.01.77,0,1.53-.01,2.3-.02h.2c.02.17,0,.34.01.51,0,.17,0,.33,0,.5v2.56c.2,0,.38,0,.57,0h2.26v3.14c-.19.01-.37,0-.55,0-.19,0-.37,0-.56,0h-1.7c0,.06,0,.1,0,.14,0,1.7,0,3.4,0,5.09,0,.18.03.36.06.53.08.42.35.65.75.75.25.06.51.09.77.09.32,0,.65,0,.97,0h.17v4.44s-.07.02-.1.02c-.27.01-.54.03-.81.04-.7.01-1.4.03-2.1.03-.43,0-.86-.01-1.29-.04-.62-.04-1.23-.12-1.83-.3-.41-.12-.8-.28-1.15-.54-.46-.34-.76-.79-.95-1.32-.15-.42-.24-.86-.27-1.31-.03-.34-.05-.69-.06-1.04-.01-.36-.02-.72-.02-1.09,0-1.76,0-3.53,0-5.29v-.21h-2.05c-.03-.12-.04-2.96,0-3.14ZM47.98,30.83c-.11-.42-.2-.77-.3-1.13-.1-.35-.2-.7-.29-1.05-.1-.36-.19-.71-.29-1.07-.1-.35-.2-.7-.29-1.05-.1-.36-.2-.71-.3-1.07-.1-.35-.2-.7-.29-1.05-.1-.36-.19-.71-.29-1.07-.1-.35-.18-.7-.3-1.04-.01,0-.03,0-.04,0-.02.05-.04.1-.05.15-.18.7-.35,1.39-.52,2.09-.5,2.02-1.01,4.04-1.51,6.06,0,.03-.02.06-.02.09-.01.06-.05.08-.11.08-.03,0-.1.06-.1.06h-5.65c-1.67-4.72-3.34-9.43-5.01-14.15h5.86s.51,1.85.77,2.79c.26.94.51,1.89.77,2.83.26.93.51,1.87.77,2.81.01,0,.03,0,.04,0,.02-.05.04-.09.06-.14.2-.73.4-1.45.6-2.18.36-1.3.72-2.6,1.08-3.9.19-.71.39-1.41.59-2.12.01-.04.02-.08.04-.09h5.07c.77,2.79,1.54,5.61,2.31,8.43.09-.02.08-.09.1-.14.14-.51.29-1.02.43-1.53.21-.77.42-1.53.63-2.3.39-1.43.79-2.86,1.18-4.29.02-.07.06-.19.06-.19h5.68c-1.61,4.72-3.22,9.44-4.83,14.15h-5.84ZM66.93,30.67c-.21,0-.41.02-.62.02-.78-.01-1.55-.08-2.31-.25-.67-.14-1.31-.35-1.93-.63-.73-.34-1.4-.76-2-1.3-1.05-.96-1.71-2.15-2-3.55-.09-.44-.13-.89-.14-1.33-.01-.73.07-1.44.27-2.14.25-.83.65-1.58,1.23-2.24.57-.65,1.25-1.17,2.02-1.57.94-.49,1.93-.79,2.97-.94.36-.05.73-.08,1.1-.12.53-.05,1.06-.04,1.6-.02,1.03.05,2.04.22,3.02.55.85.29,1.64.69,2.35,1.25.76.6,1.37,1.33,1.82,2.19.44.86.7,1.77.8,2.74.03.35.04.7.06,1.05,0,.05,0,.1,0,.17h-11.29c-.04.16,0,.31.02.46.15.8.59,1.4,1.3,1.79.82.45,1.69.53,2.59.25.5-.16.9-.47,1.17-.92.06-.09.11-.11.21-.11,1.63,0,3.27,0,4.9,0h.61c-.02.06-.02.1-.04.14-.27.79-.69,1.49-1.27,2.09-.75.78-1.67,1.32-2.67,1.71-.8.31-1.63.5-2.47.62-.42.06-.85.1-1.28.1Z" style="fill: #d9251d; stroke-width: 0px;"></path></g><path d="M128.46,48.86h-57.1c-1.68,0-3.05-1.36-3.05-3.05v-9h63.2v9c0,1.68-1.37,3.05-3.05,3.05Z" style="fill: #921e1b; stroke-width: 0px;"></path><g><path d="M73.62,45.81l4.32-5.85c.07-.09.17-.14.28-.14h.8c.07,0,.1.04.1.1v5.9c0,.07-.03.1-.1.1h-.8c-.11,0-.2-.05-.28-.14l-1.46-1.97-1.46,1.97c-.07.09-.17.14-.28.14h-1.07s-.05-.01-.07-.04-.01-.05,0-.08ZM77.19,42.87l.87,1.17v-2.34l-.87,1.17Z" style="fill: #fff; stroke-width: 0px;"></path><path d="M80.1,39.8h.85s.05.01.07.03c.02.02.03.04.03.07v3.71c0,.15.03.3.08.44.05.14.12.27.21.38s.2.2.33.27.26.11.41.13c.17.02.33,0,.48-.06.15-.06.28-.14.4-.25.11-.11.2-.24.27-.39.07-.15.1-.31.1-.48v-3.75s.01-.05.03-.07c.02-.02.05-.03.07-.03h.84s.05.01.07.03c.02.02.03.04.03.07v3.75c0,.31-.06.6-.17.87-.11.27-.27.51-.46.72-.19.21-.42.37-.68.49-.26.12-.54.19-.84.19-.31,0-.6-.05-.87-.18-.27-.12-.51-.29-.71-.51-.2-.21-.36-.46-.48-.75-.12-.28-.17-.58-.17-.91v-3.7s0-.05.03-.07c.02-.02.04-.03.07-.03Z" style="fill: #fff; stroke-width: 0px;"></path><path d="M84.82,39.92s0-.05.03-.07c.02-.02.04-.03.07-.03h3.65c.11,0,.2.05.28.14l.62.85s.03.06.01.08c-.01.03-.04.04-.07.04h-1.88v4.9c0,.07-.03.1-.1.1h-.87c-.07,0-.1-.03-.1-.1v-4.9h-1.55s-.05-.01-.07-.03c-.02-.02-.03-.05-.03-.07v-.9Z" style="fill: #fff; stroke-width: 0px;"></path><path d="M89.57,42.85c0-.43.08-.83.23-1.2.15-.37.36-.69.62-.97.26-.27.57-.48.93-.64.36-.15.74-.23,1.15-.22.41,0,.79.09,1.15.25.36.16.66.38.93.66.26.28.47.61.62.98.15.37.22.77.22,1.19,0,.43-.09.82-.24,1.19-.16.37-.37.69-.64.97s-.58.49-.93.64c-.36.15-.74.23-1.15.23s-.78-.08-1.14-.24c-.35-.16-.66-.38-.92-.66-.26-.28-.46-.6-.61-.98-.15-.37-.22-.78-.22-1.21ZM90.61,42.89c0,.27.05.53.15.78.1.25.24.46.41.65.17.18.37.33.6.44.23.11.47.16.73.16.25,0,.49-.06.72-.18.23-.11.42-.26.59-.45.17-.19.3-.41.4-.65s.14-.51.14-.79c0-.27-.05-.53-.15-.78-.1-.25-.24-.46-.41-.64-.17-.18-.37-.33-.6-.43-.23-.11-.47-.16-.72-.16-.25,0-.49.06-.72.17-.23.11-.42.26-.59.45-.17.19-.3.4-.4.65s-.15.51-.15.79Z" style="fill: #fff; stroke-width: 0px;"></path><path d="M94.95,45.81l4.32-5.85c.07-.09.17-.14.28-.14h.8c.07,0,.1.04.1.1v4.12l3.03-4.09c.07-.09.17-.14.28-.14h.8c.07,0,.1.04.1.1v5.9c0,.07-.03.1-.1.1h-.87c-.07,0-.11-.03-.11-.1v-4.12l-3.02,4.09c-.07.09-.17.14-.28.14h-.8c-.07,0-.1-.03-.1-.1v-4.12l-3.03,4.09c-.07.09-.17.14-.28.14h-1.07s-.05-.01-.07-.04-.01-.05,0-.08Z" style="fill: #fff; stroke-width: 0px;"></path><path d="M105.26,42.85c0-.43.08-.83.23-1.2.15-.37.36-.69.62-.97.26-.27.57-.48.93-.64.36-.15.74-.23,1.15-.22.41,0,.79.09,1.15.25.36.16.66.38.93.66.26.28.47.61.62.98.15.37.22.77.22,1.19,0,.43-.09.82-.24,1.19-.16.37-.37.69-.64.97s-.58.49-.93.64c-.36.15-.74.23-1.15.23s-.78-.08-1.14-.24c-.35-.16-.66-.38-.92-.66-.26-.28-.46-.6-.61-.98-.15-.37-.22-.78-.22-1.21ZM106.29,42.89c0,.27.05.53.15.78.1.25.24.46.41.65.17.18.37.33.6.44.23.11.47.16.73.16.25,0,.49-.06.72-.18.23-.11.42-.26.59-.45.17-.19.3-.41.4-.65s.14-.51.14-.79c0-.27-.05-.53-.15-.78-.1-.25-.24-.46-.41-.64-.17-.18-.37-.33-.6-.43-.23-.11-.47-.16-.72-.16-.25,0-.49.06-.72.17-.23.11-.42.26-.59.45-.17.19-.3.4-.4.65s-.15.51-.15.79Z" style="fill: #fff; stroke-width: 0px;"></path><path d="M111.22,39.92s0-.05.03-.07c.02-.02.04-.03.07-.03h3.65c.11,0,.2.05.28.14l.62.85s.03.06.01.08c-.01.03-.04.04-.07.04h-1.88v4.9c0,.07-.03.1-.1.1h-.87c-.07,0-.1-.03-.1-.1v-4.9h-1.55s-.05-.01-.07-.03c-.02-.02-.03-.05-.03-.07v-.9Z" style="fill: #fff; stroke-width: 0px;"></path><path d="M116.27,39.82h.87c.07,0,.11.04.11.1v5.9c0,.07-.04.1-.11.1h-.87s-.05-.01-.07-.03c-.02-.02-.03-.04-.03-.07v-5.9s0-.05.03-.07c.02-.02.04-.03.07-.03Z" style="fill: #fff; stroke-width: 0px;"></path><path d="M123.46,39.82h-1.07c-.11,0-.2.05-.28.14l-3.03,4.09v-4.12s0-.05-.03-.07c-.02-.02-.04-.03-.07-.03h-.87s-.05.01-.07.03c-.02.02-.03.05-.03.07v5.9c0,.07.03.1.1.1h.8c.11,0,.2-.05.28-.14l4.32-5.85s.03-.05,0-.08-.04-.04-.07-.04Z" style="fill: #fff; stroke-width: 0px;"></path><path d="M120.39,45.81l4.37-5.85c.07-.09.17-.14.28-.14h.81c.07,0,.1.04.1.1v5.9c0,.07-.03.1-.1.1h-.81c-.11,0-.21-.05-.28-.14l-1.47-1.97-1.48,1.97c-.07.09-.17.14-.28.14h-1.08s-.05-.01-.07-.04-.01-.05,0-.08ZM123.99,42.87l.88,1.17v-2.34l-.88,1.17Z" style="fill: #fff; stroke-width: 0px;"></path></g></g></svg>`;
+const WETZEL_LOGO_DATAURI = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(WETZEL_LOGO_SVG);
+document.getElementById('headerLogo').innerHTML = WETZEL_LOGO_SVG;
+
+// PN Wetzel <-> PN Cliente master list. w=PN Wetzel, c=Cliente, pc=PN Cliente, r=Responsável
+const DEFAULT_PN_DATABASE = [{"w":"2569","c":"AAM","pc":"40117315","r":"Felipe Faria"},{"w":"2488","c":"EATON","pc":"3002122","r":"Felipe Faria"},{"w":"2498","c":"EATON","pc":"3002291","r":"Felipe Faria"},{"w":"2499","c":"EATON","pc":"3002293","r":"Felipe Faria"},{"w":"2587","c":"EATON","pc":"3003566","r":"Felipe Faria"},{"w":"2591","c":"EATON","pc":"3003838","r":"Felipe Faria"},{"w":"2617","c":"EATON","pc":"3003918","r":"Felipe Faria"},{"w":"2618","c":"EATON","pc":"3003965","r":"Felipe Faria"},{"w":"2628","c":"EATON","pc":"3004047","r":"Felipe Faria"},{"w":"2591","c":"EATON","pc":"3004047","r":"Felipe Faria"},{"w":"2630","c":"EATON","pc":"3004107","r":"Felipe Faria"},{"w":"2644","c":"EATON","pc":"3004371","r":"Felipe Faria"},{"w":"2648","c":"EATON","pc":"3004396","r":"Felipe Faria"},{"w":"2748","c":"EATON","pc":"3004987","r":"Felipe Faria"},{"w":"2436","c":"EATON","pc":"3315760","r":"Felipe Faria"},{"w":"2020","c":"EATON","pc":"3316750","r":"Felipe Faria"},{"w":"2501","c":"EATON","pc":"3317614","r":"Felipe Faria"},{"w":"2283","c":"EATON","pc":"3317955","r":"Felipe Faria"},{"w":"2512","c":"EATON","pc":"3317973","r":"Felipe Faria"},{"w":"2042","c":"EATON","pc":"3341249","r":"Felipe Faria"},{"w":"2514","c":"EATON","pc":"3341249","r":"Felipe Faria"},{"w":"2057","c":"EATON","pc":"3341273","r":"Felipe Faria"},{"w":"2516","c":"EATON","pc":"3341273","r":"Felipe Faria"},{"w":"2043","c":"EATON","pc":"3341391","r":"Felipe Faria"},{"w":"2327","c":"EATON","pc":"3342295","r":"Felipe Faria"},{"w":"2218","c":"EATON","pc":"3342461","r":"Felipe Faria"},{"w":"2319","c":"EATON","pc":"3342462","r":"Felipe Faria"},{"w":"2341","c":"EATON","pc":"3343699","r":"Felipe Faria"},{"w":"2500","c":"EATON","pc":"3343841","r":"Felipe Faria"},{"w":"2528","c":"EATON","pc":"3343917","r":"Felipe Faria"},{"w":"2505","c":"EATON","pc":"3344337","r":"Felipe Faria"},{"w":"2506","c":"EATON","pc":"3344358","r":"Felipe Faria"},{"w":"2507","c":"EATON","pc":"3344375","r":"Felipe Faria"},{"w":"2508","c":"EATON","pc":"3344410","r":"Felipe Faria"},{"w":"2043","c":"EATON","pc":"3344436","r":"Felipe Faria"},{"w":"2504","c":"EATON","pc":"3344512","r":"Felipe Faria"},{"w":"2515","c":"EATON","pc":"3344512","r":"Felipe Faria"},{"w":"2509","c":"EATON","pc":"3344514","r":"Felipe Faria"},{"w":"2510","c":"EATON","pc":"3344662","r":"Felipe Faria"},{"w":"2475","c":"EATON","pc":"3344717","r":"Felipe Faria"},{"w":"2517","c":"EATON","pc":"3344717","r":"Felipe Faria"},{"w":"2511","c":"EATON","pc":"3344745","r":"Felipe Faria"},{"w":"2485","c":"EATON","pc":"3344792","r":"Felipe Faria"},{"w":"2518","c":"EATON","pc":"3344792","r":"Felipe Faria"},{"w":"2486","c":"EATON","pc":"3344809","r":"Felipe Faria"},{"w":"2519","c":"EATON","pc":"3344809","r":"Felipe Faria"},{"w":"2570","c":"EATON","pc":"3344872","r":"Felipe Faria"},{"w":"2390","c":"EATON","pc":"3348584","r":"Felipe Faria"},{"w":"2391","c":"EATON","pc":"3348598","r":"Felipe Faria"},{"w":"2479","c":"EATON","pc":"3348598","r":"Felipe Faria"},{"w":"2392","c":"EATON","pc":"3348602","r":"Felipe Faria"},{"w":"2393","c":"EATON","pc":"3348607","r":"Felipe Faria"},{"w":"2367","c":"EATON","pc":"3348679","r":"Felipe Faria"},{"w":"2626","c":"EATON","pc":"3348679","r":"Felipe Faria"},{"w":"2513","c":"EATON","pc":"3348688","r":"Felipe Faria"},{"w":"2366","c":"EATON","pc":"3348708","r":"Felipe Faria"},{"w":"2394","c":"EATON","pc":"3348751","r":"Felipe Faria"},{"w":"2395","c":"EATON","pc":"3348760","r":"Felipe Faria"},{"w":"2496","c":"EATON","pc":"3348760","r":"Felipe Faria"},{"w":"2397","c":"EATON","pc":"3348766","r":"Felipe Faria"},{"w":"2396","c":"EATON","pc":"3348773","r":"Felipe Faria"},{"w":"2365","c":"EATON","pc":"3348791","r":"Felipe Faria"},{"w":"2476","c":"EATON","pc":"3348913","r":"Felipe Faria"},{"w":"2477","c":"EATON","pc":"3348921","r":"Felipe Faria"},{"w":"2572","c":"EATON","pc":"3361313","r":"Felipe Faria"},{"w":"2599","c":"EATON","pc":"3361349","r":"Felipe Faria"},{"w":"2523","c":"EATON","pc":"3362085","r":"Felipe Faria"},{"w":"2524","c":"EATON","pc":"3362099","r":"Felipe Faria"},{"w":"2525","c":"EATON","pc":"3362116","r":"Felipe Faria"},{"w":"2557","c":"EATON","pc":"3362161","r":"Felipe Faria"},{"w":"2552","c":"EATON","pc":"3362163","r":"Felipe Faria"},{"w":"2629","c":"EATON","pc":"3362165","r":"Felipe Faria"},{"w":"2556","c":"EATON","pc":"3362171","r":"Felipe Faria"},{"w":"2655","c":"EATON","pc":"3363366","r":"Felipe Faria"},{"w":"2643","c":"EATON","pc":"3363421","r":"Felipe Faria"},{"w":"2641","c":"EATON","pc":"3363423","r":"Felipe Faria"},{"w":"2656","c":"EATON","pc":"3363500","r":"Felipe Faria"},{"w":"2660","c":"EATON","pc":"3364086","r":"Felipe Faria"},{"w":"2685","c":"EATON","pc":"3364439","r":"Felipe Faria"},{"w":"2662","c":"EATON","pc":"3364088","r":"Felipe Faria"},{"w":"2686","c":"EATON","pc":"3364435","r":"Felipe Faria"},{"w":"2687","c":"EATON","pc":"3364090","r":"Felipe Faria"},{"w":"2663","c":"EATON","pc":"3364093","r":"Felipe Faria"},{"w":"2661","c":"EATON","pc":"3364223","r":"Felipe Faria"},{"w":"2668","c":"EATON","pc":"3364224","r":"Felipe Faria"},{"w":"2669","c":"EATON","pc":"3364225","r":"Felipe Faria"},{"w":"2670","c":"EATON","pc":"3364301","r":"Felipe Faria"},{"w":"2667","c":"EATON","pc":"3364320","r":"Felipe Faria"},{"w":"2671","c":"EATON","pc":"3364329","r":"Felipe Faria"},{"w":"2555","c":"EATON","pc":"3363421","r":"Felipe Faria"},{"w":"2643","c":"EATON","pc":"3364421","r":"Felipe Faria"},{"w":"2457","c":"EATON","pc":"4300342","r":"Felipe Faria"},{"w":"2647","c":"EATON","pc":"4308536","r":"Felipe Faria"},{"w":"2459","c":"EATON","pc":"A-6534","r":"Felipe Faria"},{"w":"2434","c":"EATON","pc":"A-6535","r":"Felipe Faria"},{"w":"2446","c":"EATON","pc":"A-6536","r":"Felipe Faria"},{"w":"2445","c":"EATON","pc":"A-6537","r":"Felipe Faria"},{"w":"2435","c":"EATON","pc":"A-6538","r":"Felipe Faria"},{"w":"2455","c":"EATON","pc":"A-6539","r":"Felipe Faria"},{"w":"2440","c":"EATON","pc":"A-6540","r":"Felipe Faria"},{"w":"2439","c":"EATON","pc":"A-6541","r":"Felipe Faria"},{"w":"2444","c":"EATON","pc":"A-6744","r":"Felipe Faria"},{"w":"2443","c":"EATON","pc":"A-6974","r":"Felipe Faria"},{"w":"2438","c":"EATON","pc":"A-6975","r":"Felipe Faria"},{"w":"2458","c":"EATON","pc":"A-7053","r":"Felipe Faria"},{"w":"2442","c":"EATON","pc":"A-7342","r":"Felipe Faria"},{"w":"2494","c":"EATON","pc":"A-7720","r":"Felipe Faria"},{"w":"2493","c":"EATON","pc":"A-7721","r":"Felipe Faria"},{"w":"2348","c":"GM","pc":"93283244","r":"Felipe Faria"},{"w":"2586","c":"GM","pc":"24577725","r":"Felipe Faria"},{"w":"2581","c":"GM","pc":"24580989","r":"Felipe Faria"},{"w":"2681","c":"GM","pc":"24580989","r":"Felipe Faria"},{"w":"2573","c":"GM","pc":"94713809","r":"Felipe Faria"},{"w":"2574","c":"GM","pc":"94713810","r":"Felipe Faria"},{"w":"2575","c":"GM","pc":"94713811","r":"Felipe Faria"},{"w":"2619","c":"GM","pc":"24579728","r":"Felipe Faria"},{"w":"2621","c":"GM","pc":"24580288","r":"Felipe Faria"},{"w":"2642","c":"GM","pc":"24581397","r":"Felipe Faria"},{"w":"2742","c":"GM","pc":"24581397","r":"Felipe Faria"},{"w":"2704","c":"GM","pc":"24592782","r":"Felipe Faria"},{"w":"2248","c":"MBB","pc":"A3660151401","r":"Gabriel Vicentin"},{"w":"2250","c":"MBB","pc":"A3640150504","r":"Gabriel Vicentin"},{"w":"2358","c":"MBB","pc":"A3660150504","r":"Gabriel Vicentin"},{"w":"2196","c":"MBB","pc":"A3640160905","r":"Gabriel Vicentin"},{"w":"2197","c":"MBB","pc":"A3660160605","r":"Gabriel Vicentin"},{"w":"2201","c":"MBB","pc":"A3660161505","r":"Gabriel Vicentin"},{"w":"2259","c":"MBB","pc":"A4420160005","r":"Gabriel Vicentin"},{"w":"2474","c":"MBB","pc":"A9722611003","r":"Gabriel Vicentin"},{"w":"2487","c":"MBB","pc":"A6852610003","r":"Gabriel Vicentin"},{"w":"2379","c":"MBB","pc":"A9722610303","r":"Gabriel Vicentin"},{"w":"2420","c":"MBB","pc":"A9722610803","r":"Gabriel Vicentin"},{"w":"2497","c":"MBB","pc":"A9722611101","r":"Gabriel Vicentin"},{"w":"2402","c":"MBB","pc":"A9722610701","r":"Gabriel Vicentin"},{"w":"2400","c":"MBB","pc":"A9722610301","r":"Gabriel Vicentin"},{"w":"2423","c":"MBB","pc":"A6942610103","r":"Gabriel Vicentin"},{"w":"2425","c":"MBB","pc":"A9702611803","r":"Gabriel Vicentin"},{"w":"2427","c":"MBB","pc":"A9762613403","r":"Gabriel Vicentin"},{"w":"2430","c":"MBB","pc":"A9702611303","r":"Gabriel Vicentin"},{"w":"2432","c":"MBB","pc":"A9702611503","r":"Gabriel Vicentin"},{"w":"2431","c":"MBB","pc":"A9702611903","r":"Gabriel Vicentin"},{"w":"2426","c":"MBB","pc":"A9762613003","r":"Gabriel Vicentin"},{"w":"2429","c":"MBB","pc":"A9762613103","r":"Gabriel Vicentin"},{"w":"2424","c":"MBB","pc":"A9762613303","r":"Gabriel Vicentin"},{"w":"2428","c":"MBB","pc":"A9762613503","r":"Gabriel Vicentin"},{"w":"2411","c":"MBB","pc":"A6942610001","r":"Gabriel Vicentin"},{"w":"2407","c":"MBB","pc":"A9702610801","r":"Gabriel Vicentin"},{"w":"2408","c":"MBB","pc":"A9702610901","r":"Gabriel Vicentin"},{"w":"2406","c":"MBB","pc":"A9702611301","r":"Gabriel Vicentin"},{"w":"2414","c":"MBB","pc":"A6952610101","r":"Gabriel Vicentin"},{"w":"2410","c":"MBB","pc":"A9762613301","r":"Gabriel Vicentin"},{"w":"2416","c":"MBB","pc":"A9762613101","r":"Gabriel Vicentin"},{"w":"2409","c":"MBB","pc":"A9762613201","r":"Gabriel Vicentin"},{"w":"2415","c":"MBB","pc":"A9762613401","r":"Gabriel Vicentin"},{"w":"2472","c":"MBB","pc":"A9702611701","r":"Gabriel Vicentin"},{"w":"2471","c":"MBB","pc":"A9702611601","r":"Gabriel Vicentin"},{"w":"2615","c":"MBB","pc":"A9702613201","r":"Gabriel Vicentin"},{"w":"2616","c":"MBB","pc":"A9702613401","r":"Gabriel Vicentin"},{"w":"2413","c":"MBB","pc":"A9702611401","r":"Gabriel Vicentin"},{"w":"2412","c":"MBB","pc":"A9702611501","r":"Gabriel Vicentin"},{"w":"2462","c":"MBB","pc":"A9712610501","r":"Gabriel Vicentin"},{"w":"2463","c":"MBB","pc":"A9712610403","r":"Gabriel Vicentin"},{"w":"2624","c":"MBB","pc":"A9762617201","r":"Gabriel Vicentin"},{"w":"2625","c":"MBB","pc":"A9762617301","r":"Gabriel Vicentin"},{"w":"2634","c":"MBB","pc":"A9672611103","r":"Gabriel Vicentin"},{"w":"2635","c":"MBB","pc":"A9672611203","r":"Gabriel Vicentin"},{"w":"2665","c":"MBB","pc":"A9722611401","r":"Gabriel Vicentin"},{"w":"2666","c":"MBB","pc":"A9722612401","r":"Gabriel Vicentin"},{"w":"2674","c":"MBB","pc":"A9672610801","r":"Gabriel Vicentin"},{"w":"2675","c":"MBB","pc":"A9672611001","r":"Gabriel Vicentin"},{"w":"2676","c":"MBB","pc":"A9402610301","r":"Gabriel Vicentin"},{"w":"2677","c":"MBB","pc":"A9672610103","r":"Gabriel Vicentin"},{"w":"2678","c":"MBB","pc":"A9672610203","r":"Gabriel Vicentin"},{"w":"2679","c":"MBB","pc":"A9616662115","r":"Gabriel Vicentin"},{"w":"2680","c":"MBB","pc":"A9616662215","r":"Gabriel Vicentin"},{"w":"2700","c":"MBB","pc":"A9722613601","r":"Gabriel Vicentin"},{"w":"2701","c":"MBB","pc":"A9722614001","r":"Gabriel Vicentin"},{"w":"2592","c":"MWM","pc":"61013055144","r":"Gabriel Vicentin"},{"w":"2593","c":"MWM","pc":"61013040071","r":"Gabriel Vicentin"},{"w":"2692","c":"MWM","pc":"61013055165","r":"Gabriel Vicentin"},{"w":"2693","c":"MWM","pc":"51013045066","r":"Gabriel Vicentin"},{"w":"2694","c":"MWM","pc":"51013045067","r":"Gabriel Vicentin"},{"w":"2754","c":"SCANIA","pc":"2539927","r":"Gabriel Vicentin"},{"w":"2747","c":"SCANIA","pc":"2508693","r":"Gabriel Vicentin"},{"w":"2744","c":"SCANIA","pc":"2508694","r":"Gabriel Vicentin"},{"w":"2745","c":"SCANIA","pc":"2184739","r":"Gabriel Vicentin"},{"w":"2746","c":"SCANIA","pc":"2190627","r":"Gabriel Vicentin"},{"w":"2749","c":"SCANIA","pc":"3066650","r":"Gabriel Vicentin"},{"w":"2750","c":"SCANIA","pc":"2999172","r":"Gabriel Vicentin"},{"w":"2751","c":"SCANIA","pc":"2999728","r":"Gabriel Vicentin"},{"w":"2854","c":"SCANIA","pc":"24221161","r":"Gabriel Vicentin"},{"w":"2636","c":"VOLVO","pc":"20483506","r":"Gabriel Vicentin"},{"w":"2737","c":"VOLVO","pc":"21982720","r":"Gabriel Vicentin"},{"w":"2698","c":"VOLVO","pc":"23973652","r":"Gabriel Vicentin"},{"w":"2718","c":"EATON","pc":"3365513","r":"Felipe Faria"},{"w":"2738","c":"VOLVO","pc":"23003679","r":"Gabriel Vicentin"},{"w":"2564","c":"ZF","pc":"1361206239","r":"Felipe Faria"},{"w":"2565","c":"ZF","pc":"1361206237","r":"Felipe Faria"},{"w":"2566","c":"ZF","pc":"1361206231","r":"Felipe Faria"},{"w":"2567","c":"ZF","pc":"1361206081","r":"Felipe Faria"},{"w":"2632","c":"ZF","pc":"1361301075","r":"Felipe Faria"},{"w":"2633","c":"ZF","pc":"1361301076","r":"Felipe Faria"},{"w":"2683","c":"ZF","pc":"1369301087","r":"Felipe Faria"},{"w":"2492","c":"EATON","pc":"A-7722","r":"Felipe Faria"},{"w":"2526","c":"EATON","pc":"A-7858","r":"Felipe Faria"},{"w":"2531","c":"EATON","pc":"A-7859","r":"Felipe Faria"},{"w":"2682","c":"ZF","pc":"1369301082","r":"Felipe Faria"},{"w":"2649","c":"EATON","pc":"A-8723","r":"Felipe Faria"},{"w":"2736","c":"VOLVO","pc":"22550742","r":"Gabriel Vicentin"},{"w":"2847","c":"SCANIA","pc":"2920376","r":"Gabriel Vicentin"},{"w":"2844","c":"SCANIA","pc":"2920377","r":"Gabriel Vicentin"},{"w":"2478","c":"AAM","pc":"40035736","r":"Felipe Faria"},{"w":"2772","c":"ZF","pc":"1369301081","r":"Felipe Faria"},{"w":"2792","c":"MWM","pc":"61013055165","r":"Gabriel Vicentin"},{"w":"2793","c":"MWM","pc":"51013045066","r":"Gabriel Vicentin"},{"w":"2697","c":"MWM","pc":"61013045071","r":"Gabriel Vicentin"},{"w":"2711","c":"MWM","pc":"61.01304-5071","r":"Gabriel Vicentin"},{"w":"2695","c":"MWM","pc":"61013050228","r":"Gabriel Vicentin"},{"w":"2709","c":"MWM","pc":"61013045066","r":"Gabriel Vicentin"},{"w":"2794","c":"MWM","pc":"61013045072","r":"Gabriel Vicentin"},{"w":"2723","c":"EATON","pc":"3006419","r":"Felipe Faria"}];
+
+let pnDatabase = loadPnDatabase();
+const pnByWetzel = new Map();
+const pnByCliente = new Map();
+
+function normPn(s){ return (s || '').toString().trim().toUpperCase(); }
+
+function loadPnDatabase(){
+  try {
+    const raw = localStorage.getItem('wetzelPnConsultaDatabase');
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed) && parsed.length) return parsed;
+    }
+  } catch (e) {}
+  return DEFAULT_PN_DATABASE;
+}
+
+function savePnDatabase(){
+  try { localStorage.setItem('wetzelPnConsultaDatabase', JSON.stringify(pnDatabase)); } catch (e) {}
+  buildIndex();
+  renderConfigTable(document.getElementById('configSearch').value);
+  renderAnalystGrid();
+}
+
+function buildIndex(){
+  pnByWetzel.clear();
+  pnByCliente.clear();
+  pnDatabase.forEach(row => {
+    if (row.w) pnByWetzel.set(normPn(row.w), row);
+    if (row.pc) pnByCliente.set(normPn(row.pc), row);
+  });
+  document.getElementById('configCount').textContent = pnDatabase.length;
+}
+
+function esc(s){
+  return (s == null ? '' : String(s)).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+// ---- Analyst photo avatars ----
+let analystPhotos = loadAnalystPhotos();
+
+function loadAnalystPhotos(){
+  try {
+    const raw = localStorage.getItem('wetzelAnalystPhotos');
+    if (raw) return JSON.parse(raw);
+  } catch (e) {}
+  return {};
+}
+
+function saveAnalystPhotos(){
+  try { localStorage.setItem('wetzelAnalystPhotos', JSON.stringify(analystPhotos)); } catch (e) {}
+}
+
+function initialsFromName(name){
+  const parts = (name || '').trim().split(/\s+/).filter(Boolean);
+  if (!parts.length) return '?';
+  const first = parts[0][0] || '';
+  const last = parts.length > 1 ? parts[parts.length - 1][0] : '';
+  return (first + last).toUpperCase();
+}
+
+function colorForName(name){
+  const palette = ['#dc1717', '#921e1b', '#0e4a66', '#5f5f5f'];
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
+  return palette[Math.abs(hash) % palette.length];
+}
+
+function makeInitialsAvatarDataURL(name){
+  const c = document.createElement('canvas');
+  c.width = 200; c.height = 200;
+  const cx = c.getContext('2d');
+  cx.fillStyle = colorForName(name || '?');
+  cx.beginPath();
+  cx.arc(100, 100, 100, 0, Math.PI * 2);
+  cx.fill();
+  cx.fillStyle = '#ffffff';
+  cx.font = 'bold 80px "Manrope", Arial, sans-serif';
+  cx.textAlign = 'center';
+  cx.textBaseline = 'middle';
+  cx.fillText(initialsFromName(name), 100, 106);
+  return c.toDataURL('image/png');
+}
+
+function avatarUrlFor(name){
+  return (name && analystPhotos[name]) ? analystPhotos[name] : makeInitialsAvatarDataURL(name);
+}
+
+const PLACEHOLDER_AVATAR_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><circle cx="256" cy="256" r="256" fill="#d8d8d8"/><circle cx="256" cy="185" r="107" fill="#8a8a8a"/><path d="M256 268c-125 0-198 90-198 172 0 18 14 32 32 32h332c18 0 32-14 32-32 0-82-73-172-198-172z" fill="#8a8a8a"/></svg>`;
+const PLACEHOLDER_AVATAR_DATAURI = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(PLACEHOLDER_AVATAR_SVG);
+
+// ---- Lookup UI ----
+let currentResult = null;
+
+function setStatus(msg, ok){
+  const el = document.getElementById('lookupStatus');
+  el.textContent = msg;
+  el.style.color = ok ? 'var(--text-secondary)' : '#c0392b';
+}
+
+function showResult(row){
+  currentResult = row;
+  document.getElementById('resultName').textContent = row.r || '—';
+  document.getElementById('resultCliente').textContent = row.c || '—';
+  document.getElementById('resultPnW').textContent = row.w || '—';
+  document.getElementById('resultPnC').textContent = row.pc || '—';
+  document.getElementById('resultAvatarImg').src = avatarUrlFor(row.r);
+}
+
+function hideResult(){
+  currentResult = null;
+  document.getElementById('resultName').textContent = '—';
+  document.getElementById('resultCliente').textContent = '—';
+  document.getElementById('resultPnW').textContent = '—';
+  document.getElementById('resultPnC').textContent = '—';
+  document.getElementById('resultAvatarImg').src = PLACEHOLDER_AVATAR_DATAURI;
+}
+
+function onQWetzelInput(){
+  const val = document.getElementById('qWetzel').value.trim();
+  document.getElementById('qCliente').value = '';
+  if (!val) { setStatus('', true); hideResult(); return; }
+  const row = pnByWetzel.get(normPn(val));
+  if (row) {
+    setStatus(`Encontrado: ${row.c || '—'}${row.r ? ' · ' + row.r : ''}`, true);
+    showResult(row);
+  } else {
+    setStatus('PN Wetzel não encontrado na base.', false);
+    hideResult();
+  }
+}
+
+function onQClienteInput(){
+  const val = document.getElementById('qCliente').value.trim();
+  document.getElementById('qWetzel').value = '';
+  if (!val) { setStatus('', true); hideResult(); return; }
+  const row = pnByCliente.get(normPn(val));
+  if (row) {
+    setStatus(`Encontrado: ${row.c || '—'}${row.r ? ' · ' + row.r : ''}`, true);
+    showResult(row);
+  } else {
+    setStatus('PN do cliente não encontrado na base.', false);
+    hideResult();
+  }
+}
+
+document.getElementById('qWetzel').addEventListener('input', onQWetzelInput);
+document.getElementById('qCliente').addEventListener('input', onQClienteInput);
+
+// ---- Copy PN to clipboard ----
+async function copyText(text){
+  try {
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(text);
+      return true;
+    }
+  } catch (e) {}
+  try {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.left = '-9999px';
+    document.body.appendChild(ta);
+    ta.focus();
+    ta.select();
+    const ok = document.execCommand('copy');
+    document.body.removeChild(ta);
+    return ok;
+  } catch (e) {
+    return false;
+  }
+}
+
+document.getElementById('resultCard').addEventListener('click', async (e) => {
+  const btn = e.target.closest('.copyBtn');
+  if (!btn) return;
+  const text = document.getElementById(btn.dataset.copyTarget).textContent.trim();
+  if (!text || text === '—') return;
+  const ok = await copyText(text);
+  if (!ok) return;
+  btn.classList.add('copied');
+  clearTimeout(btn._copyTimeout);
+  btn._copyTimeout = setTimeout(() => btn.classList.remove('copied'), 1200);
+});
+
+// ---- Tabs ----
+document.querySelectorAll('.tabBtn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tabBtn').forEach(b => b.classList.toggle('active', b === btn));
+    const tab = btn.dataset.tab;
+    document.getElementById('tab-inicio').hidden = tab !== 'inicio';
+    document.getElementById('tab-config').hidden = tab !== 'config';
+    if (tab === 'config') {
+      renderConfigTable(document.getElementById('configSearch').value);
+      renderAnalystGrid();
+    }
+  });
+});
+
+// ---- Configuração: add / edit / delete pieces ----
+let editingIndex = null;
+
+function fillForm(idx){
+  const r = pnDatabase[idx];
+  editingIndex = idx;
+  document.getElementById('formTitle').textContent = 'Editar Peça';
+  document.getElementById('formW').value = r.w || '';
+  document.getElementById('formC').value = r.c || '';
+  document.getElementById('formPc').value = r.pc || '';
+  document.getElementById('formR').value = r.r || '';
+  document.getElementById('formStatus').textContent = `Editando PN Wetzel ${r.w}.`;
+}
+
+function clearForm(){
+  editingIndex = null;
+  document.getElementById('formTitle').textContent = 'Adicionar Peça';
+  ['formW', 'formC', 'formPc', 'formR'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('formStatus').textContent = '';
+}
+
+function saveFormRow(){
+  const w = document.getElementById('formW').value.trim();
+  const c = document.getElementById('formC').value.trim().toUpperCase();
+  const pc = document.getElementById('formPc').value.trim();
+  const r = document.getElementById('formR').value.trim();
+  if (!w || !c) { alert('Preencha ao menos PN Wetzel e Cliente.'); return; }
+  const row = { w, c, pc, r };
+  if (editingIndex !== null && pnDatabase[editingIndex]) {
+    pnDatabase[editingIndex] = row;
+  } else {
+    pnDatabase.push(row);
+  }
+  savePnDatabase();
+  clearForm();
+  document.getElementById('formStatus').textContent = 'Peça salva.';
+}
+
+function deleteRow(idx){
+  const r = pnDatabase[idx];
+  if (!confirm(`Excluir a peça PN Wetzel ${r.w} (${r.c})?`)) return;
+  pnDatabase.splice(idx, 1);
+  if (editingIndex === idx) clearForm();
+  savePnDatabase();
+}
+
+function renderConfigTable(filter){
+  const body = document.getElementById('configTableBody');
+  const q = (filter || '').trim().toUpperCase();
+  const indices = pnDatabase
+    .map((r, i) => i)
+    .filter(i => !q || [pnDatabase[i].w, pnDatabase[i].c, pnDatabase[i].pc, pnDatabase[i].r].some(v => (v || '').toUpperCase().includes(q)));
+
+  if (!indices.length) {
+    body.innerHTML = '<tr class="emptyRow"><td colspan="5">Nenhuma peça encontrada.</td></tr>';
+    return;
+  }
+
+  body.innerHTML = indices.map(i => {
+    const r = pnDatabase[i];
+    return `
+    <tr>
+      <td>${esc(r.w) || '—'}</td>
+      <td>${esc(r.c) || '—'}</td>
+      <td>${esc(r.pc) || '—'}</td>
+      <td>${esc(r.r) || '—'}</td>
+      <td class="rowActions">
+        <button type="button" class="linkBtn" data-action="edit" data-idx="${i}">Editar</button>
+        <button type="button" class="linkBtn danger" data-action="delete" data-idx="${i}">Excluir</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+document.getElementById('configTableBody').addEventListener('click', (e) => {
+  const btn = e.target.closest('button[data-action]');
+  if (!btn) return;
+  const idx = Number(btn.dataset.idx);
+  if (btn.dataset.action === 'edit') fillForm(idx);
+  else if (btn.dataset.action === 'delete') deleteRow(idx);
+});
+
+document.getElementById('configSearch').addEventListener('input', (e) => renderConfigTable(e.target.value));
+
+// ---- Configuração: analyst photos ----
+let pendingPhotoName = null;
+
+function uniqueResponsibles(){
+  const set = new Set();
+  pnDatabase.forEach(r => { if (r.r) set.add(r.r); });
+  return Array.from(set).sort();
+}
+
+function renderAnalystGrid(){
+  const wrap = document.getElementById('analystGrid');
+  const names = uniqueResponsibles();
+  if (!names.length) {
+    wrap.innerHTML = '<p class="hint">Nenhum responsável cadastrado ainda.</p>';
+    return;
+  }
+  wrap.innerHTML = names.map(name => `
+    <div class="analystCard" data-name="${esc(name)}">
+      <img class="analystAvatar" src="${avatarUrlFor(name)}" alt="${esc(name)}">
+      <div class="analystName">${esc(name)}</div>
+      <button type="button" class="btn btn-secondary" data-action="photo">Trocar foto</button>
+    </div>
+  `).join('');
+  wrap.querySelectorAll('.analystCard button[data-action="photo"]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      pendingPhotoName = btn.closest('.analystCard').dataset.name;
+      document.getElementById('analystPhotoInput').click();
+    });
+  });
+}
+
+document.getElementById('analystPhotoInput').addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if (!file || !pendingPhotoName) return;
+  const name = pendingPhotoName;
+  const reader = new FileReader();
+  reader.onload = () => {
+    const img = new Image();
+    img.onload = () => {
+      const size = 240;
+      const c = document.createElement('canvas');
+      c.width = size; c.height = size;
+      const cx = c.getContext('2d');
+      const scale = Math.max(size / img.width, size / img.height);
+      const sw = size / scale, sh = size / scale;
+      cx.drawImage(img, (img.width - sw) / 2, (img.height - sh) / 2, sw, sh, 0, 0, size, size);
+      analystPhotos[name] = c.toDataURL('image/jpeg', 0.85);
+      saveAnalystPhotos();
+      renderAnalystGrid();
+      if (currentResult && currentResult.r === name) showResult(currentResult);
+    };
+    img.src = reader.result;
+  };
+  reader.readAsDataURL(file);
+  e.target.value = '';
+});
+
+// ---- Import / export ----
+function importPnDatabase(){
+  const text = document.getElementById('pnImportText').value;
+  if (!text.trim()) { alert('Cole os dados antes de importar.'); return; }
+  const lines = text.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+  let count = 0;
+  lines.forEach(line => {
+    const delim = line.includes('\t') ? '\t' : (line.includes(';') ? ';' : ',');
+    const parts = line.split(delim).map(p => p.trim());
+    if (!parts[0] || /^(pn|part\s*number)/i.test(parts[0])) return;
+    const newRow = { w: parts[0] || '', c: (parts[1] || '').toUpperCase(), pc: parts[2] || '', r: parts[3] || '' };
+    const idx = pnDatabase.findIndex(r => normPn(r.w) === normPn(newRow.w) && normPn(r.pc) === normPn(newRow.pc));
+    if (idx >= 0) pnDatabase[idx] = newRow; else pnDatabase.push(newRow);
+    count++;
+  });
+  if (!count) { alert('Nenhuma linha válida encontrada.'); return; }
+  savePnDatabase();
+  document.getElementById('pnImportText').value = '';
+  alert(`${count} peça(s) importada(s)/atualizada(s). Total na base: ${pnDatabase.length}.`);
+}
+
+function exportPnDatabase(){
+  const lines = pnDatabase.map(r => [r.w, r.c, r.pc, r.r].join(';'));
+  const blob = new Blob([lines.join('\n')], { type: 'text/csv;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'lista_pn_wetzel.csv';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function filterRows(list, query){
+  const q = (query || '').trim().toUpperCase();
+  if (!q) return list;
+  return list.filter(r => [r.w, r.c, r.pc, r.r].some(v => (v || '').toUpperCase().includes(q)));
+}
+
+// ---- Peças cadastradas: Excel / PDF export ----
+function exportPecasExcel(){
+  if (typeof XLSX === 'undefined') {
+    alert('A biblioteca de exportação para Excel não carregou (é preciso conexão com a internet na primeira vez). Use "Exportar atual (CSV)" como alternativa.');
+    return;
+  }
+  const rows = filterRows(pnDatabase, document.getElementById('configSearch').value);
+  const data = rows.map(r => ({ 'PN Wetzel': r.w, 'Cliente': r.c, 'PN Cliente': r.pc, 'Responsável': r.r }));
+  const ws = XLSX.utils.json_to_sheet(data);
+  ws['!cols'] = [{ wch: 12 }, { wch: 12 }, { wch: 18 }, { wch: 22 }];
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Peças');
+  XLSX.writeFile(wb, 'pecas_wetzel.xlsx');
+}
+
+function exportPecasPdf(){
+  const rows = filterRows(pnDatabase, document.getElementById('configSearch').value);
+  const tableRows = rows.map(r => `<tr><td>${esc(r.w) || '—'}</td><td>${esc(r.c) || '—'}</td><td>${esc(r.pc) || '—'}</td><td>${esc(r.r) || '—'}</td></tr>`).join('');
+  const win = window.open('', '_blank');
+  if (!win) {
+    alert('O navegador bloqueou a janela de impressão. Permita pop-ups para este site e tente novamente.');
+    return;
+  }
+  win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Peças Wetzel</title>
+<style>
+  body{ font-family: Arial, Helvetica, sans-serif; padding:28px; color:#222; }
+  h1{ font-size:19px; color:#dc1717; margin:0 0 2px; }
+  p{ font-size:12px; color:#5f5f5f; margin:0 0 18px; }
+  table{ width:100%; border-collapse:collapse; font-size:12px; }
+  thead{ display:table-header-group; }
+  th, td{ border:1px solid #d8d8d8; padding:7px 10px; text-align:left; }
+  th{ background:#e9e9e9; }
+  tr:nth-child(even){ background:#f7f7f7; }
+</style>
+</head><body>
+<h1>Peças Cadastradas — Wetzel Automotiva</h1>
+<p>${rows.length} peça(s) · gerado em ${new Date().toLocaleDateString('pt-BR')}</p>
+<table><thead><tr><th>PN Wetzel</th><th>Cliente</th><th>PN Cliente</th><th>Responsável</th></tr></thead>
+<tbody>${tableRows}</tbody></table>
+</body></html>`);
+  win.document.close();
+  win.focus();
+  win.print();
+}
+
+// ==== Gerador de Alerta ====
 
 const uploadedImages = []; // {img: HTMLImageElement, url: string}
 
 const wetzelLogo = new Image();
 wetzelLogo.onload = () => renderCard();
-wetzelLogo.src = 'data:image/png;base64,' + WETZEL_LOGO_B64;
+wetzelLogo.src = WETZEL_LOGO_DATAURI;
 
 document.getElementById('fileInput').addEventListener('change', (e) => {
   const files = Array.from(e.target.files).slice(0, 4 - uploadedImages.length);
@@ -311,6 +1025,15 @@ document.getElementById('cliente').addEventListener('change', (e) => {
 
 ['clienteOutro','pn','rastreio','turno','datador','responsavel','localEncontrado','defeito'].forEach(id => {
   document.getElementById(id).addEventListener('input', renderCard);
+});
+
+document.getElementById('turnoOptions').addEventListener('click', (e) => {
+  const chip = e.target.closest('.turnoChip');
+  if (!chip) return;
+  chip.classList.toggle('active');
+  const selected = Array.from(document.querySelectorAll('.turnoChip.active')).map(c => c.dataset.turno);
+  document.getElementById('turno').value = selected.join(' / ');
+  renderCard();
 });
 
 function getClienteValue(){
@@ -415,10 +1138,10 @@ function renderCard(){
   const canvas = document.getElementById('outputCanvas');
   const ctx = canvas.getContext('2d');
   const W = canvas.width, H = canvas.height;
-  const FONT = 'Arial, Helvetica, sans-serif';
-  const RED = '#c81e1e';
-  const RED_DARK = '#7a1013';
-  const GOLD = '#ffc72c';
+  const FONT = '"Manrope", Arial, Helvetica, sans-serif';
+  const RED = '#dc1717';
+  const RED_DARK = '#921e1b';
+  const NAVY = '#0e4a66';
 
   ctx.clearRect(0,0,W,H);
   ctx.fillStyle = '#ffffff';
@@ -453,25 +1176,32 @@ function renderCard(){
   }
   ctx.restore();
 
-  // icon circle with soft shadow
+  // logo badge (white rounded rect) with soft shadow
+  const logoInnerH = 50;
+  const logoAspect = (wetzelLogo.naturalWidth && wetzelLogo.naturalHeight) ? (wetzelLogo.naturalWidth / wetzelLogo.naturalHeight) : (160/55);
+  const logoInnerW = logoInnerH * logoAspect;
+  const logoPadX = 16;
+  const logoBadgeH = 74;
+  const logoBadgeW = logoInnerW + logoPadX * 2;
+  const logoBadgeX = pad;
+  const logoBadgeY = (headerH - logoBadgeH) / 2;
+
   ctx.save();
   ctx.shadowColor = 'rgba(0,0,0,0.25)';
   ctx.shadowBlur = 12;
   ctx.fillStyle = '#ffffff';
-  ctx.beginPath();
-  ctx.arc(90, 75, 46, 0, Math.PI*2);
+  roundRect(ctx, logoBadgeX, logoBadgeY, logoBadgeW, logoBadgeH, 10);
   ctx.fill();
   ctx.restore();
 
-  ctx.font = '52px Arial';
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.fillText('📣', 90, 80);
+  if (wetzelLogo.complete && wetzelLogo.naturalWidth) {
+    ctx.drawImage(wetzelLogo, logoBadgeX + logoPadX, logoBadgeY + (logoBadgeH - logoInnerH) / 2, logoInnerW, logoInnerH);
+  }
 
   ctx.textAlign = 'left';
   ctx.textBaseline = 'alphabetic';
 
-  const titleX = 160;
+  const titleX = logoBadgeX + logoBadgeW + 24;
   const titleMaxWidth = W - pad - titleX;
   const titlePart1 = 'ATENÇÃO, ';
   const titlePart2 = 'TIME WETZEL!';
@@ -490,7 +1220,7 @@ function renderCard(){
   ctx.fillStyle = '#ffffff';
   ctx.font = `bold ${titleSize}px ${FONT}`;
   ctx.fillText(titlePart1, titleX, titleBaseline);
-  ctx.fillStyle = GOLD;
+  ctx.fillStyle = '#ffffff';
   ctx.font = `italic bold ${titleSize}px ${FONT}`;
   ctx.fillText(titlePart2, titleX + w1, titleBaseline);
 
@@ -500,7 +1230,10 @@ function renderCard(){
   ctx.fillText(getTodayFormatted(), W - pad, headerH - 22);
   ctx.textAlign = 'left';
 
-  y = headerH + 20;
+  ctx.fillStyle = NAVY;
+  ctx.fillRect(0, headerH, W, 5);
+
+  y = headerH + 25;
 
   // ---- Reclamação Cliente tag ----
   ctx.font = '900 46px ' + FONT;
@@ -521,8 +1254,8 @@ function renderCard(){
   ctx.restore();
 
   roundRect(ctx, tagX, y, tagW, tagH, tagH/2);
-  ctx.lineWidth = 5;
-  ctx.strokeStyle = GOLD;
+  ctx.lineWidth = 4;
+  ctx.strokeStyle = '#ffffff';
   ctx.stroke();
 
   ctx.fillStyle = '#ffffff';
@@ -696,7 +1429,7 @@ function renderCard(){
   }
   y += logoH + 16;
 
-  ctx.fillStyle = '#888888';
+  ctx.fillStyle = '#5f5f5f';
   ctx.font = '17px ' + FONT;
   ctx.textAlign = 'center';
   ctx.fillText('Avenida Magal, 261 - Jardim Amanda II, Resende - SP, 13190-000', W/2, y);
@@ -717,33 +1450,51 @@ function fallbackDownload(canvas, filename){
   link.click();
 }
 
-async function downloadImage(){
-  renderCard();
-
-  const canvas = document.getElementById('outputCanvas');
+function getAlertFilename(){
   const cliente = (getClienteValue() || 'cliente').trim().replace(/\s+/g, '_');
   const pn = (document.getElementById('pn').value || 'pn').trim().replace(/\s+/g, '_');
-  const filename = `reclamacao_${cliente}_${pn}.png`;
+  return `reclamacao_${cliente}_${pn}.png`;
+}
 
-  const downloads = window.claude ? await window.claude.use('downloads').catch(() => null) : null;
-  if (!downloads) {
-    fallbackDownload(canvas, filename);
-    return;
-  }
+async function sendToWhatsApp(){
+  renderCard();
+  const canvas = document.getElementById('outputCanvas');
+  const filename = getAlertFilename();
 
   canvas.toBlob(async (blob) => {
-    try {
-      await downloads.save({ filename, data: blob });
-    } catch (err) {
-      if (!err || err.code !== 'declined') {
-        fallbackDownload(canvas, filename);
+    if (!blob) return;
+    const file = new File([blob], filename, { type: 'image/png' });
+
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      try {
+        await navigator.share({
+          files: [file],
+          title: 'Alerta Time Wetzel',
+          text: 'Alerta de reclamação — Time Wetzel',
+        });
+        return;
+      } catch (err) {
+        if (err && err.name === 'AbortError') return;
       }
     }
+
+    // Sem suporte a compartilhar arquivos (ex: desktop): baixa a imagem e abre o WhatsApp
+    // para que a imagem baixada seja anexada manualmente na conversa.
+    fallbackDownload(canvas, filename);
+    alert('A imagem foi baixada. O WhatsApp vai abrir em seguida — anexe a imagem baixada na conversa.');
+    window.open('https://wa.me/?text=' + encodeURIComponent('Segue o alerta de reclamação — Time Wetzel'), '_blank');
   }, 'image/png');
 }
 
-// initial render
+// ---- Init ----
+hideResult();
+buildIndex();
+renderConfigTable('');
+renderAnalystGrid();
 renderCard();
+if (document.fonts && document.fonts.ready) {
+  document.fonts.load('800 44px Manrope').then(() => document.fonts.ready).then(renderCard).catch(() => {});
+}
 </script>
 
 </body>
