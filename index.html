@@ -1106,21 +1106,25 @@ function fitTextToWidth(ctx, text, cx, baseline, maxWidth, baseSize, font, weigh
 function wrapAndFitText(ctx, text, x, y, maxWidth, maxHeight, baseSize, font){
   let size = baseSize;
   let lines;
+  const paragraphs = text.split('\n');
   do {
     ctx.font = `${size}px ${font}`;
     lines = [];
-    let words = text.split(' ');
-    let line = '';
-    words.forEach(word => {
-      const test = line ? line + ' ' + word : word;
-      if (ctx.measureText(test).width > maxWidth && line) {
-        lines.push(line);
-        line = word;
-      } else {
-        line = test;
-      }
+    paragraphs.forEach(paragraph => {
+      if (paragraph === '') { lines.push(''); return; }
+      let words = paragraph.split(' ');
+      let line = '';
+      words.forEach(word => {
+        const test = line ? line + ' ' + word : word;
+        if (ctx.measureText(test).width > maxWidth && line) {
+          lines.push(line);
+          line = word;
+        } else {
+          line = test;
+        }
+      });
+      if (line) lines.push(line);
     });
-    if (line) lines.push(line);
     size -= 2;
   } while ((lines.length * (size + 2 + 6) > maxHeight) && size > 10);
   size += 2;
