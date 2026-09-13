@@ -137,6 +137,17 @@
     display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;
   }
   .listPanelHeader h2{ margin-bottom:0; }
+  h2.panelHeading{
+    display:flex; align-items:center; gap:10px;
+    font-size:19px; font-weight:800;
+  }
+  .panelIconBadge{
+    width:34px; height:34px; border-radius:10px; flex:0 0 auto;
+    background:var(--red); color:#fff;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 2px 6px rgba(220,23,23,.35);
+  }
+  .panelIconBadge svg{ width:18px; height:18px; }
   label{
     display:block;
     font-size:13px;
@@ -398,7 +409,10 @@
 
   <div class="wrap">
     <div class="panel">
-      <h2>Consultar PN</h2>
+      <h2 class="panelHeading">
+        <span class="panelIconBadge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></span>
+        Consultar PN
+      </h2>
       <div class="row2">
         <div>
           <label for="qWetzel">PN Wetzel</label>
@@ -446,7 +460,10 @@
 
   <div class="wrap">
     <div class="panel">
-      <h2>Dados da Reclamação</h2>
+      <h2 class="panelHeading">
+        <span class="panelIconBadge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></span>
+        Dados da Reclamação
+      </h2>
 
       <label for="cliente">Cliente</label>
       <select id="cliente">
