@@ -386,6 +386,9 @@
   }
   #cs1ItemsTable td textarea{ resize:vertical; min-height:34px; min-width:220px; }
   .cs1AmostraInput{ width:56px !important; min-width:56px !important; text-align:center; }
+  .cs1FooterRow{ background:var(--gray-bg); }
+  .cs1FooterLabel{ font-weight:700; text-align:right; white-space:nowrap; }
+  .cs1FooterInput{ width:56px !important; min-width:56px !important; text-align:center; }
   .cs1FootGrid{ display:flex; gap:14px; flex-wrap:wrap; margin-top:10px; }
   .cs1FootGrid > div{ flex:1 1 160px; }
 </style>
@@ -623,7 +626,7 @@
           <button type="button" class="btn btn-primary" onclick="openCS1Editor(null)">+ Novo Registro</button>
         </div>
       </div>
-      <input type="text" id="cs1Search" placeholder="Filtrar por cliente, peça ou responsável...">
+      <input type="text" id="cs1Search" placeholder="Filtrar por cliente, peça ou motivo...">
       <div class="tableWrap">
         <table id="cs1Table">
           <thead>
@@ -631,8 +634,8 @@
               <th>Cliente</th>
               <th>Peça</th>
               <th>Estágio</th>
-              <th>Data</th>
-              <th>Responsável</th>
+              <th>Peças (colunas)</th>
+              <th>Atualizado em</th>
               <th>Ações</th>
             </tr>
           </thead>
@@ -694,10 +697,7 @@
         <div><label for="cs1Escalonamento">Escalonamento</label><input type="text" id="cs1Escalonamento"></div>
       </div>
 
-      <div class="row2" style="margin-top:6px;">
-        <div><label for="cs1Data">Data</label><input type="date" id="cs1Data"></div>
-        <div><label for="cs1Responsavel">Responsável</label><input type="text" id="cs1Responsavel"></div>
-      </div>
+      <p class="hint" style="margin-top:10px;">Data, Quantidade Inspecionada, Quantidade Reprovada e Responsável são preenchidos por peça, direto nas últimas linhas da tabela acima.</p>
 
       <div class="cs1FootGrid">
         <div><label for="cs1Area">Área / Divisão (rodapé)</label><input type="text" id="cs1Area"></div>
@@ -769,6 +769,19 @@ function cs1DefaultItems(numColunas){
   return base.map(item => Object.assign({}, item, { amostras: Array(numColunas).fill('') }));
 }
 
+const CS1_FOOTER_ROW_LABELS = [
+  { key: 'data', label: 'Data' },
+  { key: 'qtdInspecionada', label: 'Quantidade Inspecionada' },
+  { key: 'qtdReprovada', label: 'Quantidade Reprovada' },
+  { key: 'responsavel', label: 'Responsável' },
+];
+
+function cs1DefaultFooterRows(numColunas){
+  const rows = {};
+  CS1_FOOTER_ROW_LABELS.forEach(({ key }) => { rows[key] = Array(numColunas).fill(''); });
+  return rows;
+}
+
 function newCS1Record(){
   return {
     id: 'cs1_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7),
@@ -778,7 +791,7 @@ function newCS1Record(){
     planoReacao: 'Conforme MA-GQ-004 - Matriz do plano de reação por áreas.',
     nivelAlarme: '01 Peça',
     escalonamento: 'Acionar supervisor da qualidade (metrologia na ausência) ou engenheiro do produto.',
-    data: '', responsavel: '',
+    footerRows: cs1DefaultFooterRows(10),
     area: 'Wetzel Automotiva - Divisão da Qualidade',
     codigo: 'FM-GQ-018',
     revisao: 'rev02 - Mai/2017',
@@ -807,7 +820,7 @@ function saveCS1RecordsToStorage(){
 function renderCS1List(filter){
   const body = document.getElementById('cs1TableBody');
   const q = (filter || '').trim().toUpperCase();
-  const rows = cs1Records.filter(r => !q || [r.cliente, r.peca, r.responsavel].some(v => (v || '').toUpperCase().includes(q)));
+  const rows = cs1Records.filter(r => !q || [r.cliente, r.peca, r.motivo].some(v => (v || '').toUpperCase().includes(q)));
   document.getElementById('cs1Count').textContent = cs1Records.length;
   if (!rows.length) {
     body.innerHTML = '<tr class="emptyRow"><td colspan="6">Nenhum registro encontrado.</td></tr>';
@@ -818,8 +831,8 @@ function renderCS1List(filter){
       <td>${esc(r.cliente) || '—'}</td>
       <td>${esc(r.peca) || '—'}</td>
       <td>${esc(r.estagio) || '—'}</td>
-      <td>${esc(r.data) || '—'}</td>
-      <td>${esc(r.responsavel) || '—'}</td>
+      <td>${r.numColunas || '—'}</td>
+      <td>${r.updatedAt ? new Date(r.updatedAt).toLocaleDateString('pt-BR') : '—'}</td>
       <td class="rowActions">
         <button type="button" class="linkBtn" data-action="edit" data-id="${r.id}">Editar</button>
         <button type="button" class="linkBtn" data-action="pdf" data-id="${r.id}">PDF</button>
@@ -855,7 +868,18 @@ function closeCS1Editor(){
   cs1Current = null;
 }
 
+function cs1EnsureFooterRows(record){
+  if (!record.footerRows) record.footerRows = cs1DefaultFooterRows(record.numColunas);
+  CS1_FOOTER_ROW_LABELS.forEach(({ key }) => {
+    if (!Array.isArray(record.footerRows[key])) record.footerRows[key] = Array(record.numColunas).fill('');
+    while (record.footerRows[key].length < record.numColunas) record.footerRows[key].push('');
+    record.footerRows[key].length = record.numColunas;
+  });
+  return record;
+}
+
 function fillCS1EditorFromRecord(record){
+  cs1EnsureFooterRows(record);
   document.getElementById('cs1Cliente').value = record.cliente;
   document.getElementById('cs1Peca').value = record.peca;
   document.getElementById('cs1Motivo').value = record.motivo;
@@ -865,8 +889,6 @@ function fillCS1EditorFromRecord(record){
   document.getElementById('cs1PlanoReacao').value = record.planoReacao;
   document.getElementById('cs1NivelAlarme').value = record.nivelAlarme;
   document.getElementById('cs1Escalonamento').value = record.escalonamento;
-  document.getElementById('cs1Data').value = record.data;
-  document.getElementById('cs1Responsavel').value = record.responsavel;
   document.getElementById('cs1Area').value = record.area;
   document.getElementById('cs1Codigo').value = record.codigo;
   document.getElementById('cs1Revisao').value = record.revisao;
@@ -889,6 +911,7 @@ document.getElementById('cs1Peca').addEventListener('blur', (e) => {
 });
 
 function renderCS1ItemsTable(){
+  cs1EnsureFooterRows(cs1Current);
   const headRow = document.getElementById('cs1ItemsHeadRow');
   let headHtml = '<th>ID</th><th>Requisitos / Especificação</th><th>Técnica</th><th>Quant</th><th>Freq</th>';
   for (let c = 1; c <= cs1Current.numColunas; c++) headHtml += `<th>Rastr. ${c}</th>`;
@@ -896,7 +919,7 @@ function renderCS1ItemsTable(){
   headRow.innerHTML = headHtml;
 
   const body = document.getElementById('cs1ItemsBody');
-  body.innerHTML = cs1Current.itens.map((item, i) => {
+  const itemRowsHtml = cs1Current.itens.map((item, i) => {
     let amostrasHtml = '';
     for (let c = 0; c < cs1Current.numColunas; c++) {
       amostrasHtml += `<td><input type="text" data-item="${i}" data-col="${c}" class="cs1AmostraInput" value="${esc(item.amostras[c] || '')}"></td>`;
@@ -912,9 +935,30 @@ function renderCS1ItemsTable(){
       <td><button type="button" class="linkBtn danger" data-action="removeItem" data-item="${i}" title="Remover item">×</button></td>
     </tr>`;
   }).join('');
+
+  const footerRowsHtml = CS1_FOOTER_ROW_LABELS.map(({ key, label }) => {
+    let cellsHtml = '';
+    for (let c = 0; c < cs1Current.numColunas; c++) {
+      cellsHtml += `<td><input type="text" data-footer="${key}" data-col="${c}" class="cs1FooterInput" value="${esc(cs1Current.footerRows[key][c] || '')}"></td>`;
+    }
+    return `
+    <tr class="cs1FooterRow">
+      <td colspan="5" class="cs1FooterLabel">${esc(label)}</td>
+      ${cellsHtml}
+      <td></td>
+    </tr>`;
+  }).join('');
+
+  body.innerHTML = itemRowsHtml + footerRowsHtml;
 }
 
 document.getElementById('cs1ItemsBody').addEventListener('input', (e) => {
+  const footerKey = e.target.dataset.footer;
+  if (footerKey !== undefined) {
+    const col = Number(e.target.dataset.col);
+    cs1Current.footerRows[footerKey][col] = e.target.value;
+    return;
+  }
   const idxAttr = e.target.dataset.item;
   if (idxAttr === undefined) return;
   const i = Number(idxAttr);
@@ -953,6 +997,14 @@ function changeCS1Cols(delta){
       item.amostras.length = next;
     }
   });
+  CS1_FOOTER_ROW_LABELS.forEach(({ key }) => {
+    const arr = cs1Current.footerRows[key];
+    if (next > arr.length) {
+      while (arr.length < next) arr.push('');
+    } else {
+      arr.length = next;
+    }
+  });
   cs1Current.numColunas = next;
   document.getElementById('cs1ColCount').textContent = next;
   renderCS1ItemsTable();
@@ -968,8 +1020,6 @@ function syncCS1SimpleFieldsFromDOM(){
   cs1Current.planoReacao = document.getElementById('cs1PlanoReacao').value;
   cs1Current.nivelAlarme = document.getElementById('cs1NivelAlarme').value.trim();
   cs1Current.escalonamento = document.getElementById('cs1Escalonamento').value.trim();
-  cs1Current.data = document.getElementById('cs1Data').value;
-  cs1Current.responsavel = document.getElementById('cs1Responsavel').value.trim();
   cs1Current.area = document.getElementById('cs1Area').value.trim();
   cs1Current.codigo = document.getElementById('cs1Codigo').value.trim();
   cs1Current.revisao = document.getElementById('cs1Revisao').value.trim();
@@ -1003,6 +1053,7 @@ function cs1EstagioMark(record, option){
 }
 
 function cs1FormBlockHtml(record){
+  cs1EnsureFooterRows(record);
   const itemRows = record.itens.map((item, i) => {
     const cells = (item.amostras || []).slice(0, record.numColunas).map(v => `<td>${esc(v)}</td>`).join('');
     return `<tr>
@@ -1011,6 +1062,14 @@ function cs1FormBlockHtml(record){
       <td>${esc(item.tecnica)}</td>
       <td>${esc(item.quant)}</td>
       <td>${esc(item.freq)}</td>
+      ${cells}
+    </tr>`;
+  }).join('');
+
+  const footerDataRows = CS1_FOOTER_ROW_LABELS.map(({ key, label }) => {
+    const cells = record.footerRows[key].slice(0, record.numColunas).map(v => `<td>${esc(v)}</td>`).join('');
+    return `<tr class="cs1FooterRow">
+      <td class="reqCol" colspan="5">${esc(label)}</td>
       ${cells}
     </tr>`;
   }).join('');
@@ -1043,16 +1102,12 @@ function cs1FormBlockHtml(record){
       ${colHeads}
     </tr>
   </thead>
-  <tbody>${itemRows}</tbody>
+  <tbody>${itemRows}${footerDataRows}</tbody>
 </table>
 <div class="footBlock">
   <div><b>Plano de Reação:</b> ${esc(record.planoReacao)}</div>
   <div><b>Nível de Alarme:</b> ${esc(record.nivelAlarme)}</div>
   <div><b>Escalonamento:</b> ${esc(record.escalonamento)}</div>
-</div>
-<div class="bottomGrid">
-  <div><b>Data:</b> ${esc(record.data)}</div>
-  <div><b>Responsável:</b> ${esc(record.responsavel)}</div>
 </div>
 <div class="footerPage">
   <div>${esc(record.area)}</div>
@@ -1083,8 +1138,9 @@ function buildCS1PrintHtml(record){
   .quantCol, .freqCol{ width:34px; }
   .footBlock{ margin-top:4px; font-size:8px; }
   .footBlock div{ margin-bottom:1px; }
-  .bottomGrid{ display:flex; justify-content:space-between; margin-top:4px; font-size:8px; flex-wrap:wrap; gap:6px; }
   .footerPage{ display:flex; justify-content:space-between; margin-top:5px; font-size:7px; border-top:1px solid #000; padding-top:3px; }
+  .cs1FooterRow{ background:#f3f3f3; }
+  .cs1FooterRow td.reqCol{ font-weight:700; text-align:right; }
   .cs1FormBlock{ padding-bottom:4mm; }
   .cs1Divider{ border-top:1px solid #999; height:0; margin:0 0 4mm; }
 </style>
