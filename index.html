@@ -677,14 +677,9 @@
         <div><label for="cs1Escalonamento">Escalonamento</label><input type="text" id="cs1Escalonamento"></div>
       </div>
 
-      <div class="row3" style="margin-top:6px;">
+      <div class="row2" style="margin-top:6px;">
         <div><label for="cs1Data">Data</label><input type="date" id="cs1Data"></div>
-        <div><label for="cs1Hora">Hora</label><input type="time" id="cs1Hora"></div>
         <div><label for="cs1Responsavel">Responsável</label><input type="text" id="cs1Responsavel"></div>
-      </div>
-      <div class="row2">
-        <div><label for="cs1QtdInspecionada">Quantidade Inspecionada</label><input type="text" id="cs1QtdInspecionada"></div>
-        <div><label for="cs1QtdReprovada">Quantidade Reprovada</label><input type="text" id="cs1QtdReprovada"></div>
       </div>
 
       <div class="cs1FootGrid">
@@ -766,7 +761,7 @@ function newCS1Record(){
     planoReacao: 'Conforme MA-GQ-004 - Matriz do plano de reação por áreas.',
     nivelAlarme: '01 Peça',
     escalonamento: 'Acionar supervisor da qualidade (metrologia na ausência) ou engenheiro do produto.',
-    data: '', hora: '', qtdInspecionada: '', qtdReprovada: '', responsavel: '',
+    data: '', responsavel: '',
     area: 'Wetzel Automotiva - Divisão da Qualidade',
     codigo: 'FM-GQ-018',
     revisao: 'rev02 - Mai/2017',
@@ -854,9 +849,6 @@ function fillCS1EditorFromRecord(record){
   document.getElementById('cs1NivelAlarme').value = record.nivelAlarme;
   document.getElementById('cs1Escalonamento').value = record.escalonamento;
   document.getElementById('cs1Data').value = record.data;
-  document.getElementById('cs1Hora').value = record.hora;
-  document.getElementById('cs1QtdInspecionada').value = record.qtdInspecionada;
-  document.getElementById('cs1QtdReprovada').value = record.qtdReprovada;
   document.getElementById('cs1Responsavel').value = record.responsavel;
   document.getElementById('cs1Area').value = record.area;
   document.getElementById('cs1Codigo').value = record.codigo;
@@ -960,9 +952,6 @@ function syncCS1SimpleFieldsFromDOM(){
   cs1Current.nivelAlarme = document.getElementById('cs1NivelAlarme').value.trim();
   cs1Current.escalonamento = document.getElementById('cs1Escalonamento').value.trim();
   cs1Current.data = document.getElementById('cs1Data').value;
-  cs1Current.hora = document.getElementById('cs1Hora').value;
-  cs1Current.qtdInspecionada = document.getElementById('cs1QtdInspecionada').value.trim();
-  cs1Current.qtdReprovada = document.getElementById('cs1QtdReprovada').value.trim();
   cs1Current.responsavel = document.getElementById('cs1Responsavel').value.trim();
   cs1Current.area = document.getElementById('cs1Area').value.trim();
   cs1Current.codigo = document.getElementById('cs1Codigo').value.trim();
@@ -1045,8 +1034,7 @@ function cs1FormBlockHtml(record){
   <div><b>Escalonamento:</b> ${esc(record.escalonamento)}</div>
 </div>
 <div class="bottomGrid">
-  <div><b>Data:</b> ${esc(record.data)} &nbsp; <b>Hora:</b> ${esc(record.hora)}</div>
-  <div><b>Qtd. Inspecionada:</b> ${esc(record.qtdInspecionada)} &nbsp; <b>Qtd. Reprovada:</b> ${esc(record.qtdReprovada)}</div>
+  <div><b>Data:</b> ${esc(record.data)}</div>
   <div><b>Responsável:</b> ${esc(record.responsavel)}</div>
 </div>
 <div class="footerPage">
