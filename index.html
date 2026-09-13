@@ -1060,35 +1060,32 @@ function buildCS1PrintHtml(record){
   const block = cs1FormBlockHtml(record);
   return `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>CS1 - ${esc(record.peca)}</title>
 <style>
-  @page { size: A4 landscape; margin: 8mm; }
+  @page { size: A4 landscape; margin: 5mm; }
   *{ box-sizing:border-box; }
-  body{ font-family: Arial, Helvetica, sans-serif; color:#000; margin:0; padding:6mm; }
-  h1{ text-align:center; font-size:16px; margin:0 0 8px; }
-  .headFields{ display:flex; gap:22px; font-size:11px; flex-wrap:wrap; margin-bottom:6px; }
+  html, body{ width:100%; height:100%; }
+  body{ font-family: Arial, Helvetica, sans-serif; color:#000; margin:0; padding:3mm; }
+  h1{ text-align:center; font-size:14px; margin:0 0 5px; }
+  .headFields{ display:flex; gap:22px; font-size:10px; flex-wrap:wrap; margin-bottom:4px; }
   .headFields b{ margin-right:4px; }
-  .estagioBox{ margin-right:10px; font-size:10px; }
-  .estagioRow{ margin-bottom:8px; }
+  .estagioBox{ margin-right:10px; font-size:9px; }
+  .estagioRow{ margin-bottom:5px; }
   table{ width:100%; border-collapse:collapse; table-layout:fixed; }
-  th, td{ border:1px solid #000; padding:2px 4px; font-size:9px; vertical-align:top; word-break:break-word; }
+  th, td{ border:1px solid #000; padding:1px 4px; font-size:8px; vertical-align:top; word-break:break-word; }
   thead th{ background:#eee; text-align:center; }
   .idCol{ width:16px; text-align:center; }
   .reqCol{ width:280px; text-align:left; }
   .tecnicaCol{ width:62px; }
   .quantCol, .freqCol{ width:34px; }
-  .footBlock{ margin-top:6px; font-size:9px; }
-  .footBlock div{ margin-bottom:2px; }
-  .bottomGrid{ display:flex; justify-content:space-between; margin-top:6px; font-size:9px; flex-wrap:wrap; gap:6px; }
-  .footerPage{ display:flex; justify-content:space-between; margin-top:10px; font-size:8px; border-top:1px solid #000; padding-top:4px; }
-  .cs1FormBlock{ padding-bottom:6mm; }
-  .cs1CutLine{ border-top:1px dashed #666; margin:0 0 6mm; position:relative; height:1px; }
-  .cs1CutLine span{
-    position:absolute; top:-8px; left:50%; transform:translateX(-50%);
-    background:#fff; padding:0 8px; font-size:8px; color:#666;
-  }
+  .footBlock{ margin-top:4px; font-size:8px; }
+  .footBlock div{ margin-bottom:1px; }
+  .bottomGrid{ display:flex; justify-content:space-between; margin-top:4px; font-size:8px; flex-wrap:wrap; gap:6px; }
+  .footerPage{ display:flex; justify-content:space-between; margin-top:5px; font-size:7px; border-top:1px solid #000; padding-top:3px; }
+  .cs1FormBlock{ padding-bottom:4mm; }
+  .cs1Divider{ border-top:1px solid #999; height:0; margin:0 0 4mm; }
 </style>
 </head><body>
 ${block}
-<div class="cs1CutLine"><span>✂ corte aqui</span></div>
+<div class="cs1Divider"></div>
 ${block}
 </body></html>`;
 }
