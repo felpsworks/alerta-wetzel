@@ -996,7 +996,7 @@ function cs1EstagioMark(record, option){
   return record.estagio === option ? '☒' : '☐';
 }
 
-function buildCS1PrintHtml(record){
+function cs1FormBlockHtml(record){
   const itemRows = record.itens.map((item, i) => {
     const cells = (item.amostras || []).slice(0, record.numColunas).map(v => `<td>${esc(v)}</td>`).join('');
     return `<tr>
@@ -1014,29 +1014,7 @@ function buildCS1PrintHtml(record){
   const estagioRow = ['Contenção de pré-lançamento', 'Embarque Controlado', 'Estação de verificação', 'C.A.R.E']
     .map(op => `<span class="estagioBox">${cs1EstagioMark(record, op)} ${esc(op)}</span>`).join(' &nbsp; ');
 
-  return `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>CS1 - ${esc(record.peca)}</title>
-<style>
-  @page { size: A4 landscape; margin: 8mm; }
-  *{ box-sizing:border-box; }
-  body{ font-family: Arial, Helvetica, sans-serif; color:#000; margin:0; padding:6mm; }
-  h1{ text-align:center; font-size:16px; margin:0 0 8px; }
-  .headFields{ display:flex; gap:22px; font-size:11px; flex-wrap:wrap; margin-bottom:6px; }
-  .headFields b{ margin-right:4px; }
-  .estagioBox{ margin-right:10px; font-size:10px; }
-  .estagioRow{ margin-bottom:8px; }
-  table{ width:100%; border-collapse:collapse; table-layout:fixed; }
-  th, td{ border:1px solid #000; padding:2px 4px; font-size:9px; vertical-align:top; word-break:break-word; }
-  thead th{ background:#eee; text-align:center; }
-  .idCol{ width:16px; text-align:center; }
-  .reqCol{ width:280px; text-align:left; }
-  .tecnicaCol{ width:62px; }
-  .quantCol, .freqCol{ width:34px; }
-  .footBlock{ margin-top:6px; font-size:9px; }
-  .footBlock div{ margin-bottom:2px; }
-  .bottomGrid{ display:flex; justify-content:space-between; margin-top:6px; font-size:9px; flex-wrap:wrap; gap:6px; }
-  .footerPage{ display:flex; justify-content:space-between; margin-top:10px; font-size:8px; border-top:1px solid #000; padding-top:4px; }
-</style>
-</head><body>
+  return `<div class="cs1FormBlock">
 <h1>Controle de Estação de Verificação</h1>
 <div class="headFields">
   <div><b>Cliente:</b> ${esc(record.cliente)}</div>
@@ -1075,6 +1053,43 @@ function buildCS1PrintHtml(record){
   <div>${esc(record.area)}</div>
   <div>${esc(record.codigo)} — ${esc(record.revisao)}</div>
 </div>
+</div>`;
+}
+
+function buildCS1PrintHtml(record){
+  const block = cs1FormBlockHtml(record);
+  return `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>CS1 - ${esc(record.peca)}</title>
+<style>
+  @page { size: A4 landscape; margin: 8mm; }
+  *{ box-sizing:border-box; }
+  body{ font-family: Arial, Helvetica, sans-serif; color:#000; margin:0; padding:6mm; }
+  h1{ text-align:center; font-size:16px; margin:0 0 8px; }
+  .headFields{ display:flex; gap:22px; font-size:11px; flex-wrap:wrap; margin-bottom:6px; }
+  .headFields b{ margin-right:4px; }
+  .estagioBox{ margin-right:10px; font-size:10px; }
+  .estagioRow{ margin-bottom:8px; }
+  table{ width:100%; border-collapse:collapse; table-layout:fixed; }
+  th, td{ border:1px solid #000; padding:2px 4px; font-size:9px; vertical-align:top; word-break:break-word; }
+  thead th{ background:#eee; text-align:center; }
+  .idCol{ width:16px; text-align:center; }
+  .reqCol{ width:280px; text-align:left; }
+  .tecnicaCol{ width:62px; }
+  .quantCol, .freqCol{ width:34px; }
+  .footBlock{ margin-top:6px; font-size:9px; }
+  .footBlock div{ margin-bottom:2px; }
+  .bottomGrid{ display:flex; justify-content:space-between; margin-top:6px; font-size:9px; flex-wrap:wrap; gap:6px; }
+  .footerPage{ display:flex; justify-content:space-between; margin-top:10px; font-size:8px; border-top:1px solid #000; padding-top:4px; }
+  .cs1FormBlock{ padding-bottom:6mm; }
+  .cs1CutLine{ border-top:1px dashed #666; margin:0 0 6mm; position:relative; height:1px; }
+  .cs1CutLine span{
+    position:absolute; top:-8px; left:50%; transform:translateX(-50%);
+    background:#fff; padding:0 8px; font-size:8px; color:#666;
+  }
+</style>
+</head><body>
+${block}
+<div class="cs1CutLine"><span>✂ corte aqui</span></div>
+${block}
 </body></html>`;
 }
 
