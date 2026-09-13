@@ -718,13 +718,35 @@ document.getElementById('headerLogo').innerHTML = WETZEL_LOGO_SVG;
 // PN Wetzel <-> PN Cliente master list. w=PN Wetzel, c=Cliente, pc=PN Cliente, r=Responsável
 const DEFAULT_PN_DATABASE = [{"w":"2569","c":"AAM","pc":"40117315","r":"Felipe Faria"},{"w":"2488","c":"EATON","pc":"3002122","r":"Felipe Faria"},{"w":"2498","c":"EATON","pc":"3002291","r":"Felipe Faria"},{"w":"2499","c":"EATON","pc":"3002293","r":"Felipe Faria"},{"w":"2587","c":"EATON","pc":"3003566","r":"Felipe Faria"},{"w":"2591","c":"EATON","pc":"3003838","r":"Felipe Faria"},{"w":"2617","c":"EATON","pc":"3003918","r":"Felipe Faria"},{"w":"2618","c":"EATON","pc":"3003965","r":"Felipe Faria"},{"w":"2628","c":"EATON","pc":"3004047","r":"Felipe Faria"},{"w":"2591","c":"EATON","pc":"3004047","r":"Felipe Faria"},{"w":"2630","c":"EATON","pc":"3004107","r":"Felipe Faria"},{"w":"2644","c":"EATON","pc":"3004371","r":"Felipe Faria"},{"w":"2648","c":"EATON","pc":"3004396","r":"Felipe Faria"},{"w":"2748","c":"EATON","pc":"3004987","r":"Felipe Faria"},{"w":"2436","c":"EATON","pc":"3315760","r":"Felipe Faria"},{"w":"2020","c":"EATON","pc":"3316750","r":"Felipe Faria"},{"w":"2501","c":"EATON","pc":"3317614","r":"Felipe Faria"},{"w":"2283","c":"EATON","pc":"3317955","r":"Felipe Faria"},{"w":"2512","c":"EATON","pc":"3317973","r":"Felipe Faria"},{"w":"2042","c":"EATON","pc":"3341249","r":"Felipe Faria"},{"w":"2514","c":"EATON","pc":"3341249","r":"Felipe Faria"},{"w":"2057","c":"EATON","pc":"3341273","r":"Felipe Faria"},{"w":"2516","c":"EATON","pc":"3341273","r":"Felipe Faria"},{"w":"2043","c":"EATON","pc":"3341391","r":"Felipe Faria"},{"w":"2327","c":"EATON","pc":"3342295","r":"Felipe Faria"},{"w":"2218","c":"EATON","pc":"3342461","r":"Felipe Faria"},{"w":"2319","c":"EATON","pc":"3342462","r":"Felipe Faria"},{"w":"2341","c":"EATON","pc":"3343699","r":"Felipe Faria"},{"w":"2500","c":"EATON","pc":"3343841","r":"Felipe Faria"},{"w":"2528","c":"EATON","pc":"3343917","r":"Felipe Faria"},{"w":"2505","c":"EATON","pc":"3344337","r":"Felipe Faria"},{"w":"2506","c":"EATON","pc":"3344358","r":"Felipe Faria"},{"w":"2507","c":"EATON","pc":"3344375","r":"Felipe Faria"},{"w":"2508","c":"EATON","pc":"3344410","r":"Felipe Faria"},{"w":"2043","c":"EATON","pc":"3344436","r":"Felipe Faria"},{"w":"2504","c":"EATON","pc":"3344512","r":"Felipe Faria"},{"w":"2515","c":"EATON","pc":"3344512","r":"Felipe Faria"},{"w":"2509","c":"EATON","pc":"3344514","r":"Felipe Faria"},{"w":"2510","c":"EATON","pc":"3344662","r":"Felipe Faria"},{"w":"2475","c":"EATON","pc":"3344717","r":"Felipe Faria"},{"w":"2517","c":"EATON","pc":"3344717","r":"Felipe Faria"},{"w":"2511","c":"EATON","pc":"3344745","r":"Felipe Faria"},{"w":"2485","c":"EATON","pc":"3344792","r":"Felipe Faria"},{"w":"2518","c":"EATON","pc":"3344792","r":"Felipe Faria"},{"w":"2486","c":"EATON","pc":"3344809","r":"Felipe Faria"},{"w":"2519","c":"EATON","pc":"3344809","r":"Felipe Faria"},{"w":"2570","c":"EATON","pc":"3344872","r":"Felipe Faria"},{"w":"2390","c":"EATON","pc":"3348584","r":"Felipe Faria"},{"w":"2391","c":"EATON","pc":"3348598","r":"Felipe Faria"},{"w":"2479","c":"EATON","pc":"3348598","r":"Felipe Faria"},{"w":"2392","c":"EATON","pc":"3348602","r":"Felipe Faria"},{"w":"2393","c":"EATON","pc":"3348607","r":"Felipe Faria"},{"w":"2367","c":"EATON","pc":"3348679","r":"Felipe Faria"},{"w":"2626","c":"EATON","pc":"3348679","r":"Felipe Faria"},{"w":"2513","c":"EATON","pc":"3348688","r":"Felipe Faria"},{"w":"2366","c":"EATON","pc":"3348708","r":"Felipe Faria"},{"w":"2394","c":"EATON","pc":"3348751","r":"Felipe Faria"},{"w":"2395","c":"EATON","pc":"3348760","r":"Felipe Faria"},{"w":"2496","c":"EATON","pc":"3348760","r":"Felipe Faria"},{"w":"2397","c":"EATON","pc":"3348766","r":"Felipe Faria"},{"w":"2396","c":"EATON","pc":"3348773","r":"Felipe Faria"},{"w":"2365","c":"EATON","pc":"3348791","r":"Felipe Faria"},{"w":"2476","c":"EATON","pc":"3348913","r":"Felipe Faria"},{"w":"2477","c":"EATON","pc":"3348921","r":"Felipe Faria"},{"w":"2572","c":"EATON","pc":"3361313","r":"Felipe Faria"},{"w":"2599","c":"EATON","pc":"3361349","r":"Felipe Faria"},{"w":"2523","c":"EATON","pc":"3362085","r":"Felipe Faria"},{"w":"2524","c":"EATON","pc":"3362099","r":"Felipe Faria"},{"w":"2525","c":"EATON","pc":"3362116","r":"Felipe Faria"},{"w":"2557","c":"EATON","pc":"3362161","r":"Felipe Faria"},{"w":"2552","c":"EATON","pc":"3362163","r":"Felipe Faria"},{"w":"2629","c":"EATON","pc":"3362165","r":"Felipe Faria"},{"w":"2556","c":"EATON","pc":"3362171","r":"Felipe Faria"},{"w":"2655","c":"EATON","pc":"3363366","r":"Felipe Faria"},{"w":"2643","c":"EATON","pc":"3363421","r":"Felipe Faria"},{"w":"2641","c":"EATON","pc":"3363423","r":"Felipe Faria"},{"w":"2656","c":"EATON","pc":"3363500","r":"Felipe Faria"},{"w":"2660","c":"EATON","pc":"3364086","r":"Felipe Faria"},{"w":"2685","c":"EATON","pc":"3364439","r":"Felipe Faria"},{"w":"2662","c":"EATON","pc":"3364088","r":"Felipe Faria"},{"w":"2686","c":"EATON","pc":"3364435","r":"Felipe Faria"},{"w":"2687","c":"EATON","pc":"3364090","r":"Felipe Faria"},{"w":"2663","c":"EATON","pc":"3364093","r":"Felipe Faria"},{"w":"2661","c":"EATON","pc":"3364223","r":"Felipe Faria"},{"w":"2668","c":"EATON","pc":"3364224","r":"Felipe Faria"},{"w":"2669","c":"EATON","pc":"3364225","r":"Felipe Faria"},{"w":"2670","c":"EATON","pc":"3364301","r":"Felipe Faria"},{"w":"2667","c":"EATON","pc":"3364320","r":"Felipe Faria"},{"w":"2671","c":"EATON","pc":"3364329","r":"Felipe Faria"},{"w":"2555","c":"EATON","pc":"3363421","r":"Felipe Faria"},{"w":"2643","c":"EATON","pc":"3364421","r":"Felipe Faria"},{"w":"2457","c":"EATON","pc":"4300342","r":"Felipe Faria"},{"w":"2647","c":"EATON","pc":"4308536","r":"Felipe Faria"},{"w":"2459","c":"EATON","pc":"A-6534","r":"Felipe Faria"},{"w":"2434","c":"EATON","pc":"A-6535","r":"Felipe Faria"},{"w":"2446","c":"EATON","pc":"A-6536","r":"Felipe Faria"},{"w":"2445","c":"EATON","pc":"A-6537","r":"Felipe Faria"},{"w":"2435","c":"EATON","pc":"A-6538","r":"Felipe Faria"},{"w":"2455","c":"EATON","pc":"A-6539","r":"Felipe Faria"},{"w":"2440","c":"EATON","pc":"A-6540","r":"Felipe Faria"},{"w":"2439","c":"EATON","pc":"A-6541","r":"Felipe Faria"},{"w":"2444","c":"EATON","pc":"A-6744","r":"Felipe Faria"},{"w":"2443","c":"EATON","pc":"A-6974","r":"Felipe Faria"},{"w":"2438","c":"EATON","pc":"A-6975","r":"Felipe Faria"},{"w":"2458","c":"EATON","pc":"A-7053","r":"Felipe Faria"},{"w":"2442","c":"EATON","pc":"A-7342","r":"Felipe Faria"},{"w":"2494","c":"EATON","pc":"A-7720","r":"Felipe Faria"},{"w":"2493","c":"EATON","pc":"A-7721","r":"Felipe Faria"},{"w":"2348","c":"GM","pc":"93283244","r":"Felipe Faria"},{"w":"2586","c":"GM","pc":"24577725","r":"Felipe Faria"},{"w":"2581","c":"GM","pc":"24580989","r":"Felipe Faria"},{"w":"2681","c":"GM","pc":"24580989","r":"Felipe Faria"},{"w":"2573","c":"GM","pc":"94713809","r":"Felipe Faria"},{"w":"2574","c":"GM","pc":"94713810","r":"Felipe Faria"},{"w":"2575","c":"GM","pc":"94713811","r":"Felipe Faria"},{"w":"2619","c":"GM","pc":"24579728","r":"Felipe Faria"},{"w":"2621","c":"GM","pc":"24580288","r":"Felipe Faria"},{"w":"2642","c":"GM","pc":"24581397","r":"Felipe Faria"},{"w":"2742","c":"GM","pc":"24581397","r":"Felipe Faria"},{"w":"2704","c":"GM","pc":"24592782","r":"Felipe Faria"},{"w":"2248","c":"MBB","pc":"A3660151401","r":"Gabriel Vicentin"},{"w":"2250","c":"MBB","pc":"A3640150504","r":"Gabriel Vicentin"},{"w":"2358","c":"MBB","pc":"A3660150504","r":"Gabriel Vicentin"},{"w":"2196","c":"MBB","pc":"A3640160905","r":"Gabriel Vicentin"},{"w":"2197","c":"MBB","pc":"A3660160605","r":"Gabriel Vicentin"},{"w":"2201","c":"MBB","pc":"A3660161505","r":"Gabriel Vicentin"},{"w":"2259","c":"MBB","pc":"A4420160005","r":"Gabriel Vicentin"},{"w":"2474","c":"MBB","pc":"A9722611003","r":"Gabriel Vicentin"},{"w":"2487","c":"MBB","pc":"A6852610003","r":"Gabriel Vicentin"},{"w":"2379","c":"MBB","pc":"A9722610303","r":"Gabriel Vicentin"},{"w":"2420","c":"MBB","pc":"A9722610803","r":"Gabriel Vicentin"},{"w":"2497","c":"MBB","pc":"A9722611101","r":"Gabriel Vicentin"},{"w":"2402","c":"MBB","pc":"A9722610701","r":"Gabriel Vicentin"},{"w":"2400","c":"MBB","pc":"A9722610301","r":"Gabriel Vicentin"},{"w":"2423","c":"MBB","pc":"A6942610103","r":"Gabriel Vicentin"},{"w":"2425","c":"MBB","pc":"A9702611803","r":"Gabriel Vicentin"},{"w":"2427","c":"MBB","pc":"A9762613403","r":"Gabriel Vicentin"},{"w":"2430","c":"MBB","pc":"A9702611303","r":"Gabriel Vicentin"},{"w":"2432","c":"MBB","pc":"A9702611503","r":"Gabriel Vicentin"},{"w":"2431","c":"MBB","pc":"A9702611903","r":"Gabriel Vicentin"},{"w":"2426","c":"MBB","pc":"A9762613003","r":"Gabriel Vicentin"},{"w":"2429","c":"MBB","pc":"A9762613103","r":"Gabriel Vicentin"},{"w":"2424","c":"MBB","pc":"A9762613303","r":"Gabriel Vicentin"},{"w":"2428","c":"MBB","pc":"A9762613503","r":"Gabriel Vicentin"},{"w":"2411","c":"MBB","pc":"A6942610001","r":"Gabriel Vicentin"},{"w":"2407","c":"MBB","pc":"A9702610801","r":"Gabriel Vicentin"},{"w":"2408","c":"MBB","pc":"A9702610901","r":"Gabriel Vicentin"},{"w":"2406","c":"MBB","pc":"A9702611301","r":"Gabriel Vicentin"},{"w":"2414","c":"MBB","pc":"A6952610101","r":"Gabriel Vicentin"},{"w":"2410","c":"MBB","pc":"A9762613301","r":"Gabriel Vicentin"},{"w":"2416","c":"MBB","pc":"A9762613101","r":"Gabriel Vicentin"},{"w":"2409","c":"MBB","pc":"A9762613201","r":"Gabriel Vicentin"},{"w":"2415","c":"MBB","pc":"A9762613401","r":"Gabriel Vicentin"},{"w":"2472","c":"MBB","pc":"A9702611701","r":"Gabriel Vicentin"},{"w":"2471","c":"MBB","pc":"A9702611601","r":"Gabriel Vicentin"},{"w":"2615","c":"MBB","pc":"A9702613201","r":"Gabriel Vicentin"},{"w":"2616","c":"MBB","pc":"A9702613401","r":"Gabriel Vicentin"},{"w":"2413","c":"MBB","pc":"A9702611401","r":"Gabriel Vicentin"},{"w":"2412","c":"MBB","pc":"A9702611501","r":"Gabriel Vicentin"},{"w":"2462","c":"MBB","pc":"A9712610501","r":"Gabriel Vicentin"},{"w":"2463","c":"MBB","pc":"A9712610403","r":"Gabriel Vicentin"},{"w":"2624","c":"MBB","pc":"A9762617201","r":"Gabriel Vicentin"},{"w":"2625","c":"MBB","pc":"A9762617301","r":"Gabriel Vicentin"},{"w":"2634","c":"MBB","pc":"A9672611103","r":"Gabriel Vicentin"},{"w":"2635","c":"MBB","pc":"A9672611203","r":"Gabriel Vicentin"},{"w":"2665","c":"MBB","pc":"A9722611401","r":"Gabriel Vicentin"},{"w":"2666","c":"MBB","pc":"A9722612401","r":"Gabriel Vicentin"},{"w":"2674","c":"MBB","pc":"A9672610801","r":"Gabriel Vicentin"},{"w":"2675","c":"MBB","pc":"A9672611001","r":"Gabriel Vicentin"},{"w":"2676","c":"MBB","pc":"A9402610301","r":"Gabriel Vicentin"},{"w":"2677","c":"MBB","pc":"A9672610103","r":"Gabriel Vicentin"},{"w":"2678","c":"MBB","pc":"A9672610203","r":"Gabriel Vicentin"},{"w":"2679","c":"MBB","pc":"A9616662115","r":"Gabriel Vicentin"},{"w":"2680","c":"MBB","pc":"A9616662215","r":"Gabriel Vicentin"},{"w":"2700","c":"MBB","pc":"A9722613601","r":"Gabriel Vicentin"},{"w":"2701","c":"MBB","pc":"A9722614001","r":"Gabriel Vicentin"},{"w":"2592","c":"MWM","pc":"61013055144","r":"Gabriel Vicentin"},{"w":"2593","c":"MWM","pc":"61013040071","r":"Gabriel Vicentin"},{"w":"2692","c":"MWM","pc":"61013055165","r":"Gabriel Vicentin"},{"w":"2693","c":"MWM","pc":"51013045066","r":"Gabriel Vicentin"},{"w":"2694","c":"MWM","pc":"51013045067","r":"Gabriel Vicentin"},{"w":"2754","c":"SCANIA","pc":"2539927","r":"Gabriel Vicentin"},{"w":"2747","c":"SCANIA","pc":"2508693","r":"Gabriel Vicentin"},{"w":"2744","c":"SCANIA","pc":"2508694","r":"Gabriel Vicentin"},{"w":"2745","c":"SCANIA","pc":"2184739","r":"Gabriel Vicentin"},{"w":"2746","c":"SCANIA","pc":"2190627","r":"Gabriel Vicentin"},{"w":"2749","c":"SCANIA","pc":"3066650","r":"Gabriel Vicentin"},{"w":"2750","c":"SCANIA","pc":"2999172","r":"Gabriel Vicentin"},{"w":"2751","c":"SCANIA","pc":"2999728","r":"Gabriel Vicentin"},{"w":"2854","c":"SCANIA","pc":"24221161","r":"Gabriel Vicentin"},{"w":"2636","c":"VOLVO","pc":"20483506","r":"Gabriel Vicentin"},{"w":"2737","c":"VOLVO","pc":"21982720","r":"Gabriel Vicentin"},{"w":"2698","c":"VOLVO","pc":"23973652","r":"Gabriel Vicentin"},{"w":"2718","c":"EATON","pc":"3365513","r":"Felipe Faria"},{"w":"2738","c":"VOLVO","pc":"23003679","r":"Gabriel Vicentin"},{"w":"2564","c":"ZF","pc":"1361206239","r":"Felipe Faria"},{"w":"2565","c":"ZF","pc":"1361206237","r":"Felipe Faria"},{"w":"2566","c":"ZF","pc":"1361206231","r":"Felipe Faria"},{"w":"2567","c":"ZF","pc":"1361206081","r":"Felipe Faria"},{"w":"2632","c":"ZF","pc":"1361301075","r":"Felipe Faria"},{"w":"2633","c":"ZF","pc":"1361301076","r":"Felipe Faria"},{"w":"2683","c":"ZF","pc":"1369301087","r":"Felipe Faria"},{"w":"2492","c":"EATON","pc":"A-7722","r":"Felipe Faria"},{"w":"2526","c":"EATON","pc":"A-7858","r":"Felipe Faria"},{"w":"2531","c":"EATON","pc":"A-7859","r":"Felipe Faria"},{"w":"2682","c":"ZF","pc":"1369301082","r":"Felipe Faria"},{"w":"2649","c":"EATON","pc":"A-8723","r":"Felipe Faria"},{"w":"2736","c":"VOLVO","pc":"22550742","r":"Gabriel Vicentin"},{"w":"2847","c":"SCANIA","pc":"2920376","r":"Gabriel Vicentin"},{"w":"2844","c":"SCANIA","pc":"2920377","r":"Gabriel Vicentin"},{"w":"2478","c":"AAM","pc":"40035736","r":"Felipe Faria"},{"w":"2772","c":"ZF","pc":"1369301081","r":"Felipe Faria"},{"w":"2792","c":"MWM","pc":"61013055165","r":"Gabriel Vicentin"},{"w":"2793","c":"MWM","pc":"51013045066","r":"Gabriel Vicentin"},{"w":"2697","c":"MWM","pc":"61013045071","r":"Gabriel Vicentin"},{"w":"2711","c":"MWM","pc":"61.01304-5071","r":"Gabriel Vicentin"},{"w":"2695","c":"MWM","pc":"61013050228","r":"Gabriel Vicentin"},{"w":"2709","c":"MWM","pc":"61013045066","r":"Gabriel Vicentin"},{"w":"2794","c":"MWM","pc":"61013045072","r":"Gabriel Vicentin"},{"w":"2723","c":"EATON","pc":"3006419","r":"Felipe Faria"}];
 
-let pnDatabase = loadPnDatabase();
+// ---- Persistência: banco de dados interno (Flask) quando disponível,
+// com fallback automático para localStorage (uso standalone/offline, ex.:
+// GitHub Pages ou abrindo o arquivo direto no navegador). ----
+async function apiStoreGet(key){
+  try {
+    const res = await fetch('/api/store/' + key);
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data.value;
+  } catch (e) { return null; }
+}
+
+function apiStorePut(key, value){
+  fetch('/api/store/' + key, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ value }),
+  }).catch(() => {});
+}
+
+let pnDatabase = DEFAULT_PN_DATABASE.slice();
 const pnByWetzel = new Map();
 const pnByCliente = new Map();
 
 function normPn(s){ return (s || '').toString().trim().toUpperCase(); }
 
-function loadPnDatabase(){
+async function loadPnDatabase(){
+  const remote = await apiStoreGet('pecas');
+  if (Array.isArray(remote) && remote.length) return remote;
   try {
     const raw = localStorage.getItem('wetzelPnConsultaDatabase');
     if (raw) {
@@ -737,6 +759,7 @@ function loadPnDatabase(){
 
 function savePnDatabase(){
   try { localStorage.setItem('wetzelPnConsultaDatabase', JSON.stringify(pnDatabase)); } catch (e) {}
+  apiStorePut('pecas', pnDatabase);
   buildIndex();
   renderConfigTable(document.getElementById('configSearch').value);
   renderAnalystGrid();
@@ -799,10 +822,12 @@ function newCS1Record(){
   };
 }
 
-let cs1Records = loadCS1Records();
+let cs1Records = [];
 let cs1Current = null;
 
-function loadCS1Records(){
+async function loadCS1Records(){
+  const remote = await apiStoreGet('cs1_records');
+  if (Array.isArray(remote)) return remote;
   try {
     const raw = localStorage.getItem('wetzelCS1Records');
     if (raw) {
@@ -815,6 +840,7 @@ function loadCS1Records(){
 
 function saveCS1RecordsToStorage(){
   try { localStorage.setItem('wetzelCS1Records', JSON.stringify(cs1Records)); } catch (e) {}
+  apiStorePut('cs1_records', cs1Records);
 }
 
 function renderCS1List(filter){
@@ -1174,9 +1200,11 @@ function exportCS1Pdf(){
 }
 
 // ---- Analyst photo avatars ----
-let analystPhotos = loadAnalystPhotos();
+let analystPhotos = {};
 
-function loadAnalystPhotos(){
+async function loadAnalystPhotos(){
+  const remote = await apiStoreGet('analyst_photos');
+  if (remote && typeof remote === 'object') return remote;
   try {
     const raw = localStorage.getItem('wetzelAnalystPhotos');
     if (raw) return JSON.parse(raw);
@@ -1186,6 +1214,7 @@ function loadAnalystPhotos(){
 
 function saveAnalystPhotos(){
   try { localStorage.setItem('wetzelAnalystPhotos', JSON.stringify(analystPhotos)); } catch (e) {}
+  apiStorePut('analyst_photos', analystPhotos);
 }
 
 function initialsFromName(name){
@@ -2063,15 +2092,21 @@ async function sendToWhatsApp(){
 }
 
 // ---- Init ----
-hideResult();
-buildIndex();
-renderConfigTable('');
-renderAnalystGrid();
-renderCS1List('');
-renderCard();
-if (document.fonts && document.fonts.ready) {
-  document.fonts.load('800 44px Manrope').then(() => document.fonts.ready).then(renderCard).catch(() => {});
+async function bootstrap(){
+  pnDatabase = await loadPnDatabase();
+  cs1Records = await loadCS1Records();
+  analystPhotos = await loadAnalystPhotos();
+  hideResult();
+  buildIndex();
+  renderConfigTable('');
+  renderAnalystGrid();
+  renderCS1List('');
+  renderCard();
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.load('800 44px Manrope').then(() => document.fonts.ready).then(renderCard).catch(() => {});
+  }
 }
+bootstrap();
 </script>
 
 </body>

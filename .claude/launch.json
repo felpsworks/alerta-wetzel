@@ -6,6 +6,12 @@
       "runtimeExecutable": "python",
       "runtimeArgs": ["-m", "http.server", "8743"],
       "port": 8743
+    },
+    {
+      "name": "alerta-wetzel-flask",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["app.py"],
+      "port": 5000
     }
   ]
 }
